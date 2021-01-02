@@ -3,7 +3,7 @@
 		<div class="header text-center">
 			<h2 class="title">FullCalendar.io</h2>
 			<p class="category">
-				Handcrafted by our friends from
+				Handcssssssrafted by our friends from
 				<a target="_blank" href="https://fullcalendar.io/"
 					>FullCalendar.io</a
 				>. Please checkout their

@@ -8,6 +8,7 @@
 		@dateClick="dateClick"
 		:header="header"
 		:buttonIcons="buttonIcons"
+		:defaultAllDay="false"
 		:selectHelper="true"
 		:editable="true"
 	/>
@@ -106,24 +107,50 @@ export default {
 	},
 	methods: {
 		dateClick: function(info) {
-			// on select we show the Sweet Alert modal with an input
+			console.log(this.$refs);
 			Swal.fire({
 				title: "Create an Event",
 				html: `<div class="form-group">
-          <input type="text" id="vnud-input" class="form-control">
+		  <input type="text" id="vnud-input" class="form-control">
+          <input type="text" id="vnud-input2" class="form-control">
+          <input type="text" id="vnud-input3" class="form-control">
           </div>`,
 				showCancelButton: true,
 				confirmButtonClass: "btn btn-success",
 				cancelButtonClass: "btn btn-danger",
 				buttonsStyling: false
 			}).then(() => {
+				const dateArray = info.dateStr.split("-");
+				console.log(dateArray);
+				const date = {
+					year: +dateArray[0],
+					month: +dateArray[1] - 1,
+					day: +dateArray[2].slice(0, 2)
+				};
+				console.log(
+					info.dateStr,
+					date,
+					+document.getElementById("vnud-input3").value
+				);
+
 				var eventTitle = document.getElementById("vnud-input").value;
 				if (eventTitle) {
 					let calendarApi = this.$refs.calendar.getApi();
 					calendarApi.addEvent({
 						title: eventTitle,
-						start: info.dateStr,
-						allDay: true
+						start: new Date(
+							date.year,
+							date.month,
+							date.day,
+							+document.getElementById("vnud-input2").value
+						),
+						end: new Date(
+							date.year,
+							date.month,
+							date.day,
+							+document.getElementById("vnud-input3").value
+						),
+						allDay: false
 					});
 				}
 			});

@@ -1,6 +1,6 @@
 <template>
-	<ValidationObserver v-slot="{ handleSubmit }">
-		<form @submit.prevent="handleSubmit(submit)">
+	<ValidationObserver ref="register" v-slot="{ handleSubmit }">
+		<form @submit.prevent="handleSubmit(register)">
 			<div class="row">
 				<div class="col-lg-5 ml-auto">
 					<div class="info-area info-horizontal mt-5">
@@ -46,41 +46,18 @@
 				<div class="col-lg-4 mr-auto">
 					<card class="card-signup text-center" no-footer-line>
 						<template slot="header">
+							<img src="img/ws-logo.png" alt="" />
 							<h4 class="card-title">Register</h4>
-							<div class="social">
-								<button
-									class="btn btn-icon btn-round btn-twitter"
-								>
-									<i class="fa fa-twitter"></i>
-								</button>
-								<button
-									class="btn btn-icon btn-round btn-dribbble"
-								>
-									<i class="fa fa-dribbble"></i>
-								</button>
-								<button
-									class="btn btn-icon btn-round btn-facebook"
-								>
-									<i class="fa fa-facebook"> </i>
-								</button>
-								<h5 class="card-description">
-									or be classical
-								</h5>
-							</div>
 						</template>
 
 						<ValidationProvider
-							name="firstName"
+							name="FirstName"
 							rules="required"
-							v-slot="{ passed, failed }"
+							v-slot="{ passed, errors }"
 						>
 							<fg-input
 								type="text"
-								:error="
-									failed
-										? 'The First Name field is required'
-										: null
-								"
+								:error="errors[0]"
 								:hasSuccess="passed"
 								placeholder="First Name..."
 								addon-left-icon="now-ui-icons users_circle-08"
@@ -90,17 +67,13 @@
 						</ValidationProvider>
 
 						<ValidationProvider
-							name="lastName"
+							name="LastName"
 							rules="required"
-							v-slot="{ passed, failed }"
+							v-slot="{ passed, errors }"
 						>
 							<fg-input
 								type="text"
-								:error="
-									failed
-										? 'The First Name field is required'
-										: null
-								"
+								:error="errors[0]"
 								:hasSuccess="passed"
 								placeholder="Last Name..."
 								addon-left-icon="now-ui-icons text_caps-small"
@@ -110,17 +83,13 @@
 						</ValidationProvider>
 
 						<ValidationProvider
-							name="email"
+							name="Email"
 							rules="required|email"
-							v-slot="{ passed, failed }"
+							v-slot="{ passed, errors }"
 						>
 							<fg-input
 								type="email"
-								:error="
-									failed
-										? 'The Email field is required'
-										: null
-								"
+								:error="errors[0]"
 								:hasSuccess="passed"
 								placeholder="Email..."
 								addon-left-icon="now-ui-icons ui-1_email-85"
@@ -129,10 +98,37 @@
 							</fg-input>
 						</ValidationProvider>
 
-						<checkbox class="text-left" v-model="agree">
-							I agree to the
-							<a href="#something">terms and conditions</a>.
-						</checkbox>
+						<ValidationProvider
+							name="Password"
+							rules="required|confirmed:RepeatPassword"
+							v-slot="{ passed, errors }"
+						>
+							<fg-input
+								type="password"
+								:error="errors[0]"
+								:hasSuccess="passed"
+								placeholder="Password..."
+								addon-left-icon="now-ui-icons objects_key-25"
+								v-model="password"
+							>
+							</fg-input>
+						</ValidationProvider>
+
+						<ValidationProvider
+							name="RepeatPassword"
+							rules="required"
+							v-slot="{ passed, errors }"
+						>
+							<fg-input
+								type="password"
+								:error="errors[0]"
+								:hasSuccess="passed"
+								placeholder="Repeat Password..."
+								addon-left-icon="now-ui-icons objects_key-25"
+								v-model="repeatPassword"
+							>
+							</fg-input>
+						</ValidationProvider>
 
 						<n-button
 							slot="footer"
@@ -150,32 +146,27 @@
 	</ValidationObserver>
 </template>
 <script>
-import { Checkbox } from "src/components";
-
-import { extend } from "vee-validate";
-import { required, email, confirmed } from "vee-validate/dist/rules";
-
-extend("email", email);
-extend("required", required);
-extend("confirmed", confirmed);
-
 export default {
-	components: {
-		Checkbox
-	},
 	data() {
 		return {
 			email: "",
 			firstName: "",
 			lastName: "",
-			agree: false
+			password: "",
+			repeatPassword: ""
 		};
 	},
 	methods: {
 		async register() {
-			let isValidForm = await this.$validator.validate();
+			let isValidForm = await this.$refs.register.validate();
 			if (isValidForm) {
-				// TIP use this.model to send it to api and perform register call
+				var result = await this.$auth.register({
+					email: this.email,
+					firstName: this.firstName,
+					lastName: this.lastName,
+					password: this.password
+				});
+				console.log(result);
 			}
 		},
 		submit() {

@@ -131,7 +131,6 @@
 				@click="toggleSidebar"
 			>
 				<zoom-center-transition :duration="200" mode="out-in">
-					<!-- your content here -->
 					<router-view></router-view>
 				</zoom-center-transition>
 				<content-footer v-if="!$route.meta.hideFooter"></content-footer>

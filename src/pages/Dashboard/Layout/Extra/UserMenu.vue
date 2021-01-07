@@ -1,7 +1,7 @@
 <template>
 	<div class="user user__menu">
 		<div class="photo">
-			<img :src="image" alt="avatar" />
+			<i class="now-ui-icons users_circle-08"></i>
 		</div>
 		<div class="info">
 			<a
@@ -11,7 +11,7 @@
 				href="#"
 			>
 				<span>
-					{{ title }}
+					{{ `${user.Fullname}` }}
 					<b class="caret"></b>
 				</span>
 			</a>
@@ -51,6 +51,7 @@
 </template>
 <script>
 import { CollapseTransition } from "vue2-transitions";
+import { mapGetters } from "vuex";
 
 export default {
 	name: "user-menu",
@@ -71,6 +72,9 @@ export default {
 		return {
 			isClosed: true
 		};
+	},
+	computed: {
+		...mapGetters(["user"])
 	},
 	methods: {
 		toggleMenu() {

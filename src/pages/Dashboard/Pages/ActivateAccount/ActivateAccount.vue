@@ -1,51 +1,40 @@
 <template>
-	<ValidationObserver ref="login" v-slot="{ handleSubmit }">
+	<ValidationObserver ref="activate" v-slot="{ handleSubmit }">
 		<form @submit.prevent="handleSubmit(submit)">
 			<div class="col-md-4 ml-auto mr-auto">
-				<form @submit.prevent="login">
+				<form @submit.prevent="activate">
 					<card class="card-login card-plain">
 						<div slot="header">
 							<div class="logo-container">
-								<img src="img/ws-logo.png" alt="" />
+								<img src="/img/ws-logo.png" alt="" />
 							</div>
 						</div>
-
 						<div>
-							<ValidationProvider
-								name="email"
-								rules="required|email"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									type="email"
-									:error="errors[0]"
-									:hasSuccess="passed"
-									class="no-border form-control-lg"
-									placeholder="Email"
-									addon-left-icon="now-ui-icons ui-1_email-85"
-									v-model="email"
-								>
-								</fg-input>
-							</ValidationProvider>
-
+							<p class="link" style="font-size:16px">
+								Enter the password with which you will log into
+								the website
+							</p>
 							<ValidationProvider
 								name="password"
 								rules="required|min:5"
-								v-slot="{ passed, errors }"
+								v-slot="{ passed, failed }"
 							>
 								<fg-input
 									type="password"
-									:error="errors[0]"
+									:error="
+										failed
+											? 'The Password field is required'
+											: null
+									"
 									:hasSuccess="passed"
-									class="no-border form-control-lg"
-									placeholder="Password"
+									class="no-border form-control-lg mb-0"
+									placeholder="New Password"
 									addon-left-icon="now-ui-icons ui-1_lock-circle-open"
 									v-model="password"
 								>
 								</fg-input>
 							</ValidationProvider>
 						</div>
-
 						<div slot="footer">
 							<n-button
 								native-type="submit"
@@ -53,24 +42,16 @@
 								round
 								block
 							>
-								Get Started
+								Activate
 							</n-button>
 							<div class="pull-left">
 								<h6>
 									<router-link
 										class="link footer-link"
-										to="/register"
+										to="/login"
 									>
-										Create Account
+										Login?
 									</router-link>
-								</h6>
-							</div>
-
-							<div class="pull-right">
-								<h6>
-									<a href="#pablo" class="link footer-link"
-										>Need Help?</a
-									>
 								</h6>
 							</div>
 						</div>
@@ -82,19 +63,21 @@
 </template>
 <script>
 export default {
-	name: "login",
 	data() {
 		return {
-			email: "admin@workscheduler.com",
+			token: "",
 			password: "example"
 		};
 	},
+	created() {
+		if (this.$route.params.token) this.token = this.$route.params.token;
+	},
 	methods: {
-		async login() {
-			let isValidForm = await this.$refs.login.validate();
+		async activate() {
+			let isValidForm = await this.$refs.activate.validate();
 			if (isValidForm) {
-				const result = await this.$auth.logIn({
-					email: this.email,
+				const result = await this.$auth.activateAccount({
+					token: this.token,
 					password: this.password
 				});
 				console.log(result);

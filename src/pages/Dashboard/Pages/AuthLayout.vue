@@ -40,7 +40,7 @@
 				</footer>
 				<div
 					class="full-page-background"
-					style="backgroundImage: url('img/bg13.jpg')"
+					style="backgroundImage: url('/img/bg13.jpg')"
 				></div>
 			</div>
 		</div>

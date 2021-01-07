@@ -3,15 +3,36 @@ import store from "../store";
 
 export default function(Vue) {
 	Vue.auth = {
-		async logIn(provider, accessToken) {
+		async logIn(loginRequest) {
 			const result = await requestSender.send(
 				{
 					method: "post",
-					url: `/login/${provider}`
+					url: `/authentication/login`
 				},
-				accessToken !== null ? { token: accessToken } : ""
+				loginRequest
 			);
-			store.dispatch("setSession", result.data.token);
+			if (result.status)
+				store.dispatch("setSession", result.data.accessToken);
+			return result;
+		},
+		async register(registerRequest) {
+			const result = await requestSender.send(
+				{
+					method: "post",
+					url: `/authentication/register`
+				},
+				registerRequest
+			);
+			return result;
+		},
+		async activateAccount(request) {
+			const result = await requestSender.send(
+				{
+					method: "put",
+					url: `/authentication`
+				},
+				request
+			);
 			return result;
 		}
 	};

@@ -30,10 +30,12 @@ export default {
 	},
 	__responseWrapper(result, status = true) {
 		const wrappedResponse = {
-			status: result.status
+			status: result.data.Success
+				? result.data.Success
+				: result.data.success
 		};
 		if (status) {
-			wrappedResponse.data = result.data;
+			wrappedResponse.data = result.data.data;
 			Object.assign(
 				wrappedResponse,
 				result.data.count ? { count: result.data.count } : null,
@@ -42,8 +44,7 @@ export default {
 		} else {
 			wrappedResponse.errors = {
 				statusCode: result.status,
-				messages: result.data.errors,
-				message: result.data.message
+				message: result.data.Message
 			};
 		}
 		return wrappedResponse;

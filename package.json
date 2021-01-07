@@ -40,6 +40,7 @@
 		"vue-axios": "^3.2.0",
 		"vue-chartjs": "^3.5.0",
 		"vue-cookies": "^1.7.4",
+		"vue-i18n": "^8.22.2",
 		"vue-router": "^3.3.2",
 		"vue2-google-maps": "^0.10.7",
 		"vue2-transitions": "^0.3.0",

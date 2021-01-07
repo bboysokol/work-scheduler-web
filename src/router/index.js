@@ -7,6 +7,7 @@ import ScheduleHeader from "src/pages/Dashboard/Pages/Schedule/ScheduleHeader";
 // GeneralViews
 import NotFound from "src/pages/GeneralViews/NotFoundPage.vue";
 import VueRouter from "vue-router";
+import store from "../store";
 
 // Calendar
 const Schedule = () =>
@@ -71,6 +72,10 @@ const Pricing = () =>
 const Login = () =>
 	import(
 		/* webpackChunkName: "auth" */ "src/pages/Dashboard/Pages/Login/Login.vue"
+	);
+const ActivateAccount = () =>
+	import(
+		/* webpackChunkName: "auth" */ "src/pages/Dashboard/Pages/ActivateAccount/ActivateAccount.vue"
 	);
 const Register = () =>
 	import(
@@ -189,6 +194,11 @@ let authPages = {
 			component: Login
 		},
 		{
+			path: "/activate/:token",
+			name: "ActivateAccount",
+			component: ActivateAccount
+		},
+		{
 			path: "/register",
 			name: "Register",
 			component: Register
@@ -248,15 +258,16 @@ const router = new VueRouter({
 	linkActiveClass: "active"
 });
 
-// router.beforeEach((to, from, next) => {
-// 	store.dispatch("restoreSession");
-// 	const { user } = store.getters;
-// 	if (to.matched.some((route) => route.meta.requiresAuth)) {
-// 		!user ? next({ name: "Login" }) : next();
-// 	}
-// 	if (to.matched.some((route) => !route.meta.requiresAuth)) {
-// 		user ? next({ name: "Home" }) : next();
-// 	}
-// });
+router.beforeEach((to, from, next) => {
+	store.dispatch("restoreSession");
+	next();
+	// 	const { user } = store.getters;
+	// 	if (to.matched.some((route) => route.meta.requiresAuth)) {
+	// 		!user ? next({ name: "Login" }) : next();
+	// 	}
+	// 	if (to.matched.some((route) => !route.meta.requiresAuth)) {
+	// 		user ? next({ name: "Home" }) : next();
+	// 	}
+});
 
 export default router;

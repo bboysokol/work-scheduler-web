@@ -55,7 +55,7 @@ export default {
 	props: {
 		title: {
 			type: String,
-			default: "Vue NUD PRO"
+			default: "Work Scheduler"
 		},
 		backgroundColor: {
 			type: String,
@@ -76,7 +76,7 @@ export default {
 		},
 		logo: {
 			type: String,
-			default: "img/icon-vue.png"
+			default: "/img/ws-logo.png"
 		},
 		sidebarLinks: {
 			type: Array,

@@ -10,30 +10,39 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-3 col-md-6">
+			<div class="col-lg-4 col-md-6">
 				<card
 					class="card-pricing"
 					plain
 					no-footer-line
-					category="Bravo Pack"
+					category="Free use"
 				>
 					<div class="card-icon icon-warning">
 						<i class="now-ui-icons media-1_button-power"></i>
 					</div>
-					<h3 class="card-title">10$</h3>
+					<h3 class="card-title">FREE</h3>
 					<ul>
 						<li>Complete documentation</li>
 						<li>Working materials in Sketch</li>
 					</ul>
 
-					<n-button slot="footer" type="primary" round
-						>Add to Cart</n-button
+					<n-button
+						slot="footer"
+						type="primary"
+						round
+						@click.native="choose(0)"
+						>Choose</n-button
 					>
 				</card>
 			</div>
 
-			<div class="col-lg-3 col-md-6">
-				<card class="card-pricing" no-footer-line category="Alpha Pack">
+			<div class="col-lg-4 col-md-6">
+				<card
+					class="card-pricing"
+					no-footer-line
+					plain
+					category="Medium"
+				>
 					<div class="card-icon icon-primary">
 						<i class="now-ui-icons objects_diamond"></i>
 					</div>
@@ -43,18 +52,18 @@
 						<li>6 months access to the library</li>
 					</ul>
 
-					<n-button slot="footer" type="primary" round
-						>Add to Cart</n-button
+					<n-button slot="footer" type="" round disabled
+						>Coming soon</n-button
 					>
 				</card>
 			</div>
 
-			<div class="col-lg-3 col-md-6">
+			<div class="col-lg-4 col-md-6">
 				<card
 					class="card-pricing"
 					plain
 					no-footer-line
-					category=" Charlie Pack"
+					category="Enterprise"
 				>
 					<div class="card-icon icon-success ">
 						<i class="now-ui-icons media-2_sound-wave"></i>
@@ -65,31 +74,8 @@
 						<li>1 year access to the library</li>
 					</ul>
 
-					<n-button slot="footer" type="primary" round
-						>Add to Cart</n-button
-					>
-				</card>
-			</div>
-
-			<div class="col-lg-3 col-md-6">
-				<card
-					class="card-pricing"
-					plain
-					no-footer-line
-					category=" Extra Pack"
-				>
-					<div class="card-icon icon-danger ">
-						<i class="now-ui-icons education_atom"></i>
-					</div>
-					<h3 class="card-title">159$</h3>
-
-					<ul>
-						<li>Complete documentation</li>
-						<li>2GB cloud storage</li>
-					</ul>
-
-					<n-button slot="footer" type="neutral" round
-						>Add to Cart</n-button
+					<n-button slot="footer" type="" round disabled
+						>Coming soon</n-button
 					>
 				</card>
 			</div>
@@ -97,6 +83,27 @@
 	</div>
 </template>
 <script>
-export default {};
+export default {
+	methods: {
+		choose(tier) {
+			if (this.$route.params.id) {
+				this.$router.push({
+					name: "CreateCompany",
+					params: {
+						id: this.$route.params.id,
+						tier: +tier
+					}
+				});
+			} else {
+				this.$router.push({
+					name: "Register",
+					params: {
+						tier: +tier
+					}
+				});
+			}
+		}
+	}
+};
 </script>
 <style></style>

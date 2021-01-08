@@ -12,7 +12,11 @@ export default new Vuex.Store({
 	},
 	getters: {
 		user: (state) => state.user,
-		company: (state) => state.company
+		company: (state) => state.company,
+		isLogged: (state) => !!state.user,
+		isAppAdmin: (state) => !!state.user && state.user.role === "AppAdmin",
+		isAdmin: (state) => !!state.user && state.user.role === "Admin",
+		isModerator: (state) => !!state.user && state.user.role === "Moderator"
 	},
 	mutations: {
 		storeUser(state, user) {
@@ -20,6 +24,9 @@ export default new Vuex.Store({
 		},
 		storeCompany(state, company) {
 			state.company = company;
+		},
+		storeFullname(state, fullname) {
+			state.user.Fullname = fullname;
 		}
 	},
 	actions: {
@@ -29,6 +36,9 @@ export default new Vuex.Store({
 		},
 		setCompany({ commit }, company) {
 			commit("storeCompany", company);
+		},
+		setFullName({ commit }, fullname) {
+			commit("storeFullname", fullname);
 		},
 		restoreSession({ dispatch, state }) {
 			if (cookieHelper.hasSessionCookie() && state.user === null) {

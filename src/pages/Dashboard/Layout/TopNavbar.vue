@@ -48,12 +48,24 @@
 						</p>
 					</a>
 				</li>
+				<li class="nav-item">
+					<n-button
+						class="my-0"
+						@click.native="destroySession()"
+						type="danger"
+						simple
+						block
+					>
+						Logout
+					</n-button>
+				</li>
 			</ul>
 		</template>
 	</navbar>
 </template>
 <script>
 import { Navbar, NavbarToggleButton } from "src/components";
+import { mapActions } from "vuex";
 
 export default {
 	components: {
@@ -73,6 +85,7 @@ export default {
 		};
 	},
 	methods: {
+		...mapActions(["destroySession"]),
 		capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		},

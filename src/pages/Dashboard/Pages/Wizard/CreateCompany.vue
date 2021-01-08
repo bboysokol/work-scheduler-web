@@ -1,8 +1,8 @@
 <template>
-	<ValidationObserver ref="activate" v-slot="{ handleSubmit }">
+	<ValidationObserver ref="create" v-slot="{ handleSubmit }">
 		<form @submit.prevent="handleSubmit(submit)">
 			<div class="col-md-4 ml-auto mr-auto">
-				<form @submit.prevent="activate">
+				<form @submit.prevent="create">
 					<card class="card-login card-plain">
 						<div slot="header">
 							<div class="logo-container">
@@ -11,22 +11,21 @@
 						</div>
 						<div>
 							<p class="link" style="font-size:16px">
-								Enter the password with which you will log into
-								the website
+								Enter name of your company
 							</p>
 							<ValidationProvider
-								name="password"
-								rules="required|min:5"
-								v-slot="{ passed, errors }"
+								name="CompanyName"
+								rules="required"
+								v-slot="{ errors, passed }"
 							>
 								<fg-input
-									type="password"
+									type="text"
 									:error="errors[0]"
 									:hasSuccess="passed"
 									class="no-border form-control-lg mb-0"
-									placeholder="New Password"
+									placeholder="Company Name"
 									addon-left-icon="now-ui-icons ui-1_lock-circle-open"
-									v-model="password"
+									v-model="companyName"
 								>
 								</fg-input>
 							</ValidationProvider>
@@ -38,7 +37,7 @@
 								round
 								block
 							>
-								Activate
+								Create
 							</n-button>
 							<div class="pull-left">
 								<h6>
@@ -61,26 +60,34 @@
 export default {
 	data() {
 		return {
-			token: "",
-			password: "example"
+			companyName: ""
 		};
 	},
 	created() {
-		if (this.$route.params.token) this.token = this.$route.params.token;
+		if (!this.$route.params.id && !this.$route.params.tier)
+			this.$router.push({ name: "Home" });
 	},
 	methods: {
-		async activate() {
-			let isValidForm = await this.$refs.activate.validate();
+		async create() {
+			let isValidForm = await this.$refs.create.validate();
 			if (isValidForm) {
-				const result = await this.$auth.activateAccount({
-					token: this.token,
-					password: this.password
+				const result = await this.$company.addCompany({
+					name: this.companyName,
+					tier: +this.$route.params.tier,
+					adminId: this.$route.params.id
 				});
-				console.log(result);
+				if (result.status === true) {
+					this.$notify({
+						message: "Company created, now you can login",
+						timeout: 4000,
+						icon: "now-ui-icons ui-1_bell-53",
+						horizontalAlign: "bottom",
+						verticalAlign: "right",
+						type: "success"
+					});
+					this.$router.push({ name: "Login" });
+				}
 			}
-		},
-		submit() {
-			alert("Form has been submitted!");
 		}
 	}
 };

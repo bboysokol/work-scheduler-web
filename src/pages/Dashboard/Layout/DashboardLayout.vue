@@ -120,6 +120,13 @@
 						}"
 					></sidebar-item>
 				</sidebar-item>
+				<sidebar-item
+					:link="{
+						name: 'Forms',
+						icon: 'now-ui-icons files_single-copy-04'
+					}"
+				>
+				</sidebar-item>
 			</template>
 		</side-bar>
 		<div class="main-panel">

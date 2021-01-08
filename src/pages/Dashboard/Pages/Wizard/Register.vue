@@ -166,11 +166,21 @@ export default {
 					lastName: this.lastName,
 					password: this.password
 				});
-				console.log(result);
+				if (result.status === true) {
+					this.$router.push({
+						name: "Pricing",
+						params: { id: result.data }
+					});
+					if (this.$route.params.tier)
+						this.$router.push({
+							name: "CreateCompany",
+							params: {
+								id: result.data,
+								tier: this.$route.params.tier
+							}
+						});
+				}
 			}
-		},
-		submit() {
-			alert("Form has been submitted!");
 		}
 	}
 };

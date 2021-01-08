@@ -104,7 +104,7 @@
 	</div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
 	data() {
 		return {
@@ -121,16 +121,31 @@ export default {
 		this.userCopy.lastName = fullname[1];
 	},
 	methods: {
+		...mapActions(["setFullName"]),
 		async save() {
 			let isValidForm = await this.$refs.edit.validate();
 			if (isValidForm) {
-				const result = await this.$auth.logIn({
-					email: this.email,
-					password: this.password
-				});
-				console.log(result);
+				const result = await this.$profile.updateProfile(
+					+this.user.ProfileId,
+					{
+						firstName: this.userCopy.firstName,
+						lastName: this.userCopy.lastName
+					}
+				);
+				if (result.status === true) {
+					this.$notify({
+						message: "Profile updated successfuly",
+						timeout: 3000,
+						icon: "now-ui-icons ui-1_bell-53",
+						horizontalAlign: "bottom",
+						verticalAlign: "right",
+						type: "success"
+					});
+					this.setFullName(
+						`${this.userCopy.firstName} ${this.userCopy.lastName}`
+					);
+				}
 			}
-			alert("Your data: " + JSON.stringify(this.user));
 		}
 	}
 };

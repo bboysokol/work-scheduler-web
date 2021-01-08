@@ -4,7 +4,6 @@ import DashboardLayout from "src/pages/Dashboard/Layout/DashboardLayout.vue";
 import AuthLayout from "src/pages/Dashboard/Pages/AuthLayout.vue";
 import SchedulerHeader from "src/pages/Dashboard/Pages/CompanyAdminPages/Scheduler/SchedulerHeader";
 import ScheduleHeader from "src/pages/Dashboard/Pages/Schedule/ScheduleHeader";
-// GeneralViews
 import NotFound from "src/pages/GeneralViews/NotFoundPage.vue";
 import VueRouter from "vue-router";
 import store from "../store";
@@ -54,7 +53,6 @@ const ExtendedForms = () =>
 	import("src/pages/Dashboard/Forms/ExtendedForms.vue");
 const ValidationForms = () =>
 	import("src/pages/Dashboard/Forms/ValidationForms.vue");
-const Wizard = () => import("src/pages/Dashboard/Pages/Wizard/Wizard.vue");
 
 // Pages
 const User = () =>
@@ -81,7 +79,10 @@ const Register = () =>
 	import(
 		/* webpackChunkName: "auth" */ "src/pages/Dashboard/Pages/Wizard/Register.vue"
 	);
-
+const CreateCompany = () =>
+	import(
+		/* webpackChunkName: "auth" */ "src/pages/Dashboard/Pages/Wizard/CreateCompany.vue"
+	);
 const UsersTable = () =>
 	import(
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/UsersTable.vue"
@@ -155,11 +156,6 @@ let formsMenu = {
 			path: "validation",
 			name: "Validation Forms",
 			components: { default: ValidationForms, header: DefaultHeader }
-		},
-		{
-			path: "wizard",
-			name: "Wizard",
-			components: { default: Wizard, header: DefaultHeader }
 		}
 	]
 };
@@ -172,11 +168,17 @@ let pagesMenu = {
 	children: [
 		{
 			path: "me",
+			meta: {
+				auth: true
+			},
 			name: "User Page",
 			components: { default: User, header: DefaultHeader }
 		},
 		{
 			path: "edit",
+			meta: {
+				auth: true
+			},
 			name: "Edit Profile",
 			components: { default: EditUser, header: DefaultHeader }
 		}
@@ -207,6 +209,11 @@ let authPages = {
 			path: "/pricing",
 			name: "Pricing",
 			component: Pricing
+		},
+		{
+			path: "/company",
+			name: "CreateCompany",
+			component: CreateCompany
 		}
 	]
 };
@@ -229,21 +236,33 @@ const routes = [
 		children: [
 			{
 				path: "schedule",
+				meta: {
+					auth: true
+				},
 				name: "Schedule",
 				components: { default: Schedule, header: ScheduleHeader }
 			},
 			{
 				path: "scheduler",
+				meta: {
+					admin: true
+				},
 				name: "Scheduler",
 				components: { default: Scheduler, header: SchedulerHeader }
 			},
 			{
 				path: "users",
+				meta: {
+					admin: true
+				},
 				name: "Users Table",
 				components: { default: UsersTable, header: DefaultHeader }
 			},
 			{
 				path: "companies",
+				meta: {
+					appAdmin: true
+				},
 				name: "Companies Table",
 				components: { default: CompaniesTable, header: DefaultHeader }
 			}
@@ -260,14 +279,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	store.dispatch("restoreSession");
-	next();
-	// 	const { user } = store.getters;
-	// 	if (to.matched.some((route) => route.meta.requiresAuth)) {
-	// 		!user ? next({ name: "Login" }) : next();
-	// 	}
-	// 	if (to.matched.some((route) => !route.meta.requiresAuth)) {
-	// 		user ? next({ name: "Home" }) : next();
-	// 	}
+	const { isAppAdmin, isAdmin, isModerator, isLogged } = store.getters;
+	if (to.matched.some((route) => route.meta.appAdmin)) {
+		!isAppAdmin ? next({ name: "Login" }) : next();
+	} else if (to.matched.some((route) => route.meta.admin)) {
+		!isAdmin || !isModerator ? next({ name: "Login" }) : next();
+	} else if (to.matched.some((route) => route.meta.auth)) {
+		!isLogged ? next({ name: "Login" }) : next();
+	} else {
+		console.log("hehe");
+		isLogged ? next({ name: "Dashboard" }) : next();
+	}
 });
 
 export default router;

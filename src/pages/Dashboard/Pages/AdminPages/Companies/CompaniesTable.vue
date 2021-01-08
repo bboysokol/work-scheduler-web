@@ -36,7 +36,7 @@
 							</el-input>
 						</fg-input>
 					</div>
-					<el-table stripe style="width: 100%;" :data="queriedData">
+					<el-table stripe style="width: 100%;" :data="tableData">
 						<el-table-column
 							v-for="column in tableColumns"
 							:key="column.label"
@@ -51,18 +51,6 @@
 							label="Actions"
 						>
 							<div slot-scope="props" class="table-actions">
-								<n-button
-									@click.native="
-										handleLike(props.$index, props.row)
-									"
-									class="like"
-									type="info"
-									size="sm"
-									round
-									icon
-								>
-									<i class="fa fa-heart"></i>
-								</n-button>
 								<n-button
 									@click.native="
 										handleEdit(props.$index, props.row)
@@ -116,8 +104,6 @@
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
 import { Pagination as NPagination } from "src/components";
-import users from "./users";
-import Fuse from "fuse.js";
 import Swal from "sweetalert2";
 
 export default {
@@ -129,16 +115,6 @@ export default {
 		[TableColumn.name]: TableColumn
 	},
 	computed: {
-		/***
-		 * Returns a page from the searched data or the whole data. Search is performed in the watch section below
-		 */
-		queriedData() {
-			let result = this.tableData;
-			if (this.searchedData.length > 0) {
-				result = this.searchedData;
-			}
-			return result.slice(this.from, this.to);
-		},
 		to() {
 			let highBound = this.from + this.pagination.perPage;
 			if (this.total < highBound) {
@@ -150,9 +126,13 @@ export default {
 			return this.pagination.perPage * (this.pagination.currentPage - 1);
 		},
 		total() {
-			return this.searchedData.length > 0
-				? this.searchedData.length
-				: this.tableData.length;
+			return this.pagination.total;
+		},
+		perPage() {
+			return this.pagination.perPage;
+		},
+		currentPage() {
+			return this.pagination.currentPage;
 		}
 	},
 	data() {
@@ -164,7 +144,7 @@ export default {
 				total: 0
 			},
 			searchQuery: "",
-			propsToSearch: ["name", "email", "age"],
+			propsToSearch: ["name"],
 			tableColumns: [
 				{
 					prop: "name",
@@ -172,34 +152,28 @@ export default {
 					minWidth: 200
 				},
 				{
-					prop: "email",
-					label: "Email",
+					prop: "tier",
+					label: "Tier",
 					minWidth: 250
-				},
-				{
-					prop: "age",
-					label: "Age",
-					minWidth: 100
-				},
-				{
-					prop: "salary",
-					label: "Salary",
-					minWidth: 120
 				}
 			],
-			tableData: users,
-			searchedData: [],
-			fuseSearch: null
+			tableData: []
 		};
 	},
+	created() {
+		this.getCompanies();
+	},
 	methods: {
-		handleLike(index, row) {
-			Swal.fire({
-				title: `You liked ${row.name}`,
-				buttonsStyling: false,
-				type: "success",
-				confirmButtonClass: "btn btn-success btn-fill"
+		async getCompanies() {
+			const result = await this.$company.getCompanies({
+				page: this.pagination.currentPage,
+				pageSize: this.pagination.perPage,
+				searchQuery: this.searchQuery
 			});
+			if (result.status === true) {
+				this.pagination.total = result.data.count;
+				this.tableData = result.data.results;
+			}
 		},
 		handleEdit(index, row) {
 			Swal.fire({
@@ -231,34 +205,31 @@ export default {
 				}
 			});
 		},
-		deleteRow(row) {
-			let indexToDelete = this.tableData.findIndex(
-				(tableRow) => tableRow.id === row.id
-			);
-			if (indexToDelete >= 0) {
-				this.tableData.splice(indexToDelete, 1);
+		async deleteRow(row) {
+			const result = await this.$company.deleteCompany(+row.id);
+			if (result.status) {
+				let indexToDelete = this.tableData.findIndex(
+					(tableRow) => tableRow.id === row.id
+				);
+				if (indexToDelete >= 0) {
+					this.tableData.splice(indexToDelete, 1);
+				}
 			}
 		}
 	},
-	mounted() {
-		// Fuse search initialization.
-		this.fuseSearch = new Fuse(this.tableData, {
-			keys: ["name", "email"],
-			threshold: 0.3
-		});
-	},
 	watch: {
-		/**
-		 * Searches through the table data by a given query.
-		 * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
-		 * @param value of the query
-		 */
 		searchQuery(value) {
 			let result = this.tableData;
 			if (value !== "") {
 				result = this.fuseSearch.search(this.searchQuery);
 			}
 			this.searchedData = result;
+		},
+		currentPage() {
+			this.getCompanies();
+		},
+		perPage() {
+			this.getCompanies();
 		}
 	}
 };

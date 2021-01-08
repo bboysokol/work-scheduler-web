@@ -11,10 +11,18 @@ import i18n from "./locales/i18n";
 import router from "./router";
 import authorizationService from "./services/authorizationService.js";
 import companyService from "./services/companyService.js";
+import profileService from "./services/profileService.js";
+import scheduleService from "./services/scheduleService.js";
+import shiftService from "./services/shiftService.js";
+import userService from "./services/userService.js";
 import store from "./store";
 
 Vue.use(authorizationService);
 Vue.use(companyService);
+Vue.use(profileService);
+Vue.use(scheduleService);
+Vue.use(shiftService);
+Vue.use(userService);
 
 Vue.use(VueCookies);
 Vue.use(VueAxios, Axios);

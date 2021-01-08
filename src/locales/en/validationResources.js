@@ -6,7 +6,8 @@ const en = {
 		Password: "Password",
 		Email: "Email",
 		LastName: "Last Name",
-		RepeatPassword: "Repeat Password"
+		RepeatPassword: "Repeat Password",
+		CompanyName: "Company Name"
 	},
 	validation: english.messages
 };

@@ -22,13 +22,6 @@ module.exports = {
 			})
 		]
 	},
-	pwa: {
-		name: "Vue Now UI Dashboard PRO",
-		themeColor: "#212120",
-		msTileColor: "#212120",
-		appleMobileWebAppCapable: "yes",
-		appleMobileWebAppStatusBarStyle: "#212120"
-	},
 	css: {
 		// Enable CSS source maps.
 		sourceMap: process.env.NODE_ENV !== "production"

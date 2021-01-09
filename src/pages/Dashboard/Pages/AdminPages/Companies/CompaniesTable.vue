@@ -178,6 +178,7 @@ export default {
 		handleEdit(index, row) {
 			Swal.fire({
 				title: `You want to edit ${row.name}`,
+				html: "<h3>asdad</h3>",
 				buttonsStyling: false,
 				confirmButtonClass: "btn btn-info btn-fill"
 			});

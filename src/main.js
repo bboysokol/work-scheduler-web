@@ -56,16 +56,17 @@ Vue.axios.interceptors.response.use(
 					message: "Connection error"
 				}
 			};
-		} else if (error.response.status === 500) {
-			this.$notify.error({
-				title: "Error",
-				message: error.response.data.message
-			});
-		} else if (
-			error.response.status === 401 ||
-			error.response.status === 403 // TODO: Consider this
-		) {
 		}
+		console.log(error.response.data.Message);
+		console.log(Vue.prototype.$notify);
+		Vue.prototype.$notify({
+			message: error.response.data.Message,
+			timeout: 3000,
+			icon: "now-ui-icons ui-1_bell-53",
+			horizontalAlign: "bottom",
+			verticalAlign: "right",
+			type: "danger"
+		});
 		return Promise.reject(errorResponse);
 	}
 );

@@ -15,7 +15,7 @@
 								the website
 							</p>
 							<ValidationProvider
-								name="password"
+								name="Password"
 								rules="required|min:5"
 								v-slot="{ passed, errors }"
 							>
@@ -74,9 +74,20 @@ export default {
 			if (isValidForm) {
 				const result = await this.$auth.activateAccount({
 					token: this.token,
-					password: this.password
+					newPassword: this.password
 				});
-				console.log(result);
+				if (result.status) {
+					this.$notify({
+						message:
+							"User activated successfuly. Now you can login into your account",
+						timeout: 4000,
+						icon: "now-ui-icons ui-1_bell-53",
+						horizontalAlign: "bottom",
+						verticalAlign: "right",
+						type: "success"
+					});
+					this.$router.push({ name: "Login" });
+				}
 			}
 		},
 		submit() {

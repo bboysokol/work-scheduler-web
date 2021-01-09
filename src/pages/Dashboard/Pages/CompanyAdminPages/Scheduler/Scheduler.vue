@@ -1,21 +1,68 @@
 <template>
-	<fullCalendar
-		ref="calendar"
-		defaultView="dayGridMonth"
-		:plugins="calendarPlugins"
-		:events="events"
-		:selectable="true"
-		@dateClick="dateClick"
-		:header="header"
-		:buttonIcons="buttonIcons"
-		:defaultAllDay="false"
-		:selectHelper="true"
-		:editable="true"
-	/>
+	<div style="overflow-x: scroll; overflow-y: scroll; max-height:700px">
+		<table style="width:100%; border: 1px solid black; ">
+			<tr style="border: 1px solid black;">
+				<th
+					style="border: 1px solid black; min-width:150px"
+					class="p-0"
+				>
+					Day
+				</th>
+				<th
+					style="border: 1px solid black; min-width:150px"
+					class="p-0"
+				></th>
+				<th
+					v-for="(i, index) in 25"
+					:key="index"
+					style="border: 1px solid black; min-width:150px"
+					class="p-0"
+				>
+					{{ i - 1 }}
+				</th>
+			</tr>
+			<tr
+				v-for="(day, index) in schedules"
+				:key="index"
+				style="border: 1px solid black"
+			>
+				<td style="border: 1px solid black" class="p-0">
+					{{ day.name }}
+				</td>
+				<td class="p-0">
+					<table style="width:100%">
+						<tr
+							v-for="shift in day.shifts"
+							:key="shift.title"
+							style="border: 1px solid black; width:100%!important"
+						>
+							{{
+								shift.title
+							}}
+						</tr>
+					</table>
+				</td>
+
+				<td v-for="(i, index) in 25" :key="index" class="p-0">
+					<table style="width:100%">
+						<tr
+							v-for="shift in day.shifts"
+							:key="shift.title"
+							class="time-test"
+							:class="[
+								isFilled(shift, i - 1) ? 'test-class' : ''
+							]"
+						>
+							.
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
 </template>
 <script>
 import Swal from "sweetalert2";
-import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -25,11 +72,36 @@ const y = today.getFullYear();
 const m = today.getMonth();
 const d = today.getDate();
 export default {
-	components: {
-		FullCalendar
+	async mounted() {
+		const result = await this.$schedule.getSchedules({
+			startDate: new Date(2021, 0, 4),
+			endDate: new Date(2021, 0, 10)
+		});
+		console.log(result);
+		const shifts = [];
+		result.data.forEach((schedule) => {
+			this.schedules[
+				new Date(schedule.date).getDay() - 1
+			].shifts = schedule.workingTimeRegisters.map((shift) => ({
+				start: new Date(shift.startTime),
+				end: new Date(shift.endTime),
+				allDay: false,
+				title: `${shift.user.personalData.firstName} ${shift.user.personalData.lastName}`
+			}));
+		});
+		console.log(shifts);
 	},
 	data() {
 		return {
+			schedules: [
+				{ name: "Monday", shifts: [] },
+				{ name: "Tuesday", shifts: [] },
+				{ name: "Wednesday", shifts: [] },
+				{ name: "Thursday", shifts: [] },
+				{ name: "Friday", shifts: [] },
+				{ name: "Saturday", shifts: [] },
+				{ name: "Sunday", shifts: [] }
+			],
 			calendarPlugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
 			header: {
 				center: "dayGridMonth,timeGridWeek,timeGridDay",
@@ -46,6 +118,9 @@ export default {
 				{
 					title: "All Day Event",
 					start: new Date(y, m, 1),
+					end: new Date(y, m, 1),
+					allDay: false,
+
 					className: "event-default"
 				},
 				{
@@ -106,6 +181,10 @@ export default {
 		};
 	},
 	methods: {
+		isFilled(item, i) {
+			console.log(item.start.getHours() <= i && item.end.getHours() >= i);
+			return item.start.getHours() <= i && item.end.getHours() >= i;
+		},
 		dateClick: function(info) {
 			console.log(this.$refs);
 			Swal.fire({
@@ -165,5 +244,13 @@ export default {
 
 .el-loading-spinner .path {
 	stroke: #66615b !important;
+}
+.test-class {
+	background: red !important;
+	border-radius: 20px;
+}
+.time-test {
+	border-top: 1px solid black;
+	padding: 2px 0 2px;
 }
 </style>

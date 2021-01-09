@@ -35,18 +35,16 @@
 					class="nav-item"
 					icon="now-ui-icons location_world"
 				>
-					<a class="dropdown-item" href="#">Action</a>
-					<a class="dropdown-item" href="#">Another action</a>
-					<a class="dropdown-item" href="#">Something else here</a>
+					<a class="dropdown-item" href="#">English</a>
 				</drop-down>
 
 				<li class="nav-item">
-					<a class="nav-link" href="#pablo">
+					<router-link class="nav-link" :to="{ name: 'User Page' }">
 						<i class="now-ui-icons users_single-02"></i>
 						<p>
 							<span class="d-lg-none d-md-block">Account</span>
 						</p>
-					</a>
+					</router-link>
 				</li>
 				<li class="nav-item">
 					<n-button

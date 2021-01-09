@@ -32,7 +32,7 @@ export default function(Vue) {
 			const result = await requestSender.send(
 				{
 					method: "put",
-					url: `/users/${+id}`
+					url: `/users/${id}`
 				},
 				request
 			);

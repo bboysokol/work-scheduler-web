@@ -2,10 +2,20 @@
 	<div class="row">
 		<div class="col-12">
 			<card card-body-classes="table-full-width" no-footer-line>
-				<h4 slot="header" class="card-title">Paginated Tables</h4>
+				<div
+					class="col-12 d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap"
+				>
+					<h4 slot="header" class="card-title">Paginated Tables</h4>
+					<router-link :to="{ name: 'User Add' }">
+						<n-button type="success" round>
+							Add User
+						</n-button>
+					</router-link>
+				</div>
+
 				<div>
 					<div
-						class="col-12 d-flex justify-content-center justify-content-sm-between flex-wrap"
+						class="col-12 d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap"
 					>
 						<el-select
 							class="select-primary mb-3"
@@ -36,7 +46,7 @@
 							</el-input>
 						</fg-input>
 					</div>
-					<el-table stripe style="width: 100%;" :data="queriedData">
+					<el-table stripe style="width: 100%;" :data="tableData">
 						<el-table-column
 							v-for="column in tableColumns"
 							:key="column.label"
@@ -45,6 +55,22 @@
 							:label="column.label"
 						>
 						</el-table-column>
+						<el-table-column label="Active" width="100">
+							<template slot-scope="scope">
+								<n-checkbox
+									:disabled="true"
+									:checked="scope.row.isActive"
+								></n-checkbox>
+							</template>
+						</el-table-column>
+						<el-table-column label="Deleted" width="120">
+							<template slot-scope="scope">
+								<n-checkbox
+									:disabled="true"
+									:checked="scope.row.isDeleted"
+								></n-checkbox>
+							</template>
+						</el-table-column>
 						<el-table-column
 							:min-width="135"
 							fixed="right"
@@ -52,21 +78,7 @@
 						>
 							<div slot-scope="props" class="table-actions">
 								<n-button
-									@click.native="
-										handleLike(props.$index, props.row)
-									"
-									class="like"
-									type="info"
-									size="sm"
-									round
-									icon
-								>
-									<i class="fa fa-heart"></i>
-								</n-button>
-								<n-button
-									@click.native="
-										handleEdit(props.$index, props.row)
-									"
+									@click.native="handleEdit(props.row)"
 									class="edit"
 									type="warning"
 									size="sm"
@@ -76,6 +88,9 @@
 									<i class="fa fa-calendar"></i>
 								</n-button>
 								<n-button
+									v-if="
+										!isAdmin || props.row.role !== 'Admin'
+									"
 									@click.native="
 										handleDelete(props.$index, props.row)
 									"
@@ -116,8 +131,7 @@
 <script>
 import { Table, TableColumn, Select, Option } from "element-ui";
 import { Pagination as NPagination } from "src/components";
-import users from "./users";
-import Fuse from "fuse.js";
+import { mapGetters } from "vuex";
 import Swal from "sweetalert2";
 
 export default {
@@ -129,16 +143,7 @@ export default {
 		[TableColumn.name]: TableColumn
 	},
 	computed: {
-		/***
-		 * Returns a page from the searched data or the whole data. Search is performed in the watch section below
-		 */
-		queriedData() {
-			let result = this.tableData;
-			if (this.searchedData.length > 0) {
-				result = this.searchedData;
-			}
-			return result.slice(this.from, this.to);
-		},
+		...mapGetters(["isAdmin"]),
 		to() {
 			let highBound = this.from + this.pagination.perPage;
 			if (this.total < highBound) {
@@ -150,9 +155,13 @@ export default {
 			return this.pagination.perPage * (this.pagination.currentPage - 1);
 		},
 		total() {
-			return this.searchedData.length > 0
-				? this.searchedData.length
-				: this.tableData.length;
+			return this.pagination.total;
+		},
+		perPage() {
+			return this.pagination.perPage;
+		},
+		currentPage() {
+			return this.pagination.currentPage;
 		}
 	},
 	data() {
@@ -164,12 +173,17 @@ export default {
 				total: 0
 			},
 			searchQuery: "",
-			propsToSearch: ["name", "email", "age"],
+			propsToSearch: ["name"],
 			tableColumns: [
 				{
-					prop: "name",
-					label: "Name",
-					minWidth: 200
+					prop: "personalData.firstName",
+					label: "First Name",
+					minWidth: 150
+				},
+				{
+					prop: "personalData.lastName",
+					label: "Last Name",
+					minWidth: 150
 				},
 				{
 					prop: "email",
@@ -177,36 +191,36 @@ export default {
 					minWidth: 250
 				},
 				{
-					prop: "age",
-					label: "Age",
-					minWidth: 100
+					prop: "role",
+					label: "Role",
+					minWidth: 150
 				},
 				{
-					prop: "salary",
-					label: "Salary",
-					minWidth: 120
+					prop: "personalData.employmentType",
+					label: "Employment Time",
+					minWidth: 250
 				}
 			],
-			tableData: users,
-			searchedData: [],
-			fuseSearch: null
+			tableData: []
 		};
 	},
+	created() {
+		this.getUsers();
+	},
 	methods: {
-		handleLike(index, row) {
-			Swal.fire({
-				title: `You liked ${row.name}`,
-				buttonsStyling: false,
-				type: "success",
-				confirmButtonClass: "btn btn-success btn-fill"
+		async getUsers() {
+			const result = await this.$user.getUsers({
+				page: this.pagination.currentPage,
+				pageSize: this.pagination.perPage,
+				searchQuery: this.searchQuery
 			});
+			if (result.status === true) {
+				this.pagination.total = result.data.count;
+				this.tableData = result.data.results;
+			}
 		},
-		handleEdit(index, row) {
-			Swal.fire({
-				title: `You want to edit ${row.name}`,
-				buttonsStyling: false,
-				confirmButtonClass: "btn btn-info btn-fill"
-			});
+		handleEdit(row) {
+			this.$router.push({ name: "User Edit", params: { user: row } });
 		},
 		handleDelete(index, row) {
 			Swal.fire({
@@ -231,34 +245,31 @@ export default {
 				}
 			});
 		},
-		deleteRow(row) {
-			let indexToDelete = this.tableData.findIndex(
-				(tableRow) => tableRow.id === row.id
-			);
-			if (indexToDelete >= 0) {
-				this.tableData.splice(indexToDelete, 1);
+		async deleteRow(row) {
+			const result = await this.$user.deleteUser(row.id);
+			if (result.status) {
+				let indexToDelete = this.tableData.findIndex(
+					(tableRow) => tableRow.id === row.id
+				);
+				if (indexToDelete >= 0) {
+					this.tableData.splice(indexToDelete, 1);
+				}
 			}
 		}
 	},
-	mounted() {
-		// Fuse search initialization.
-		this.fuseSearch = new Fuse(this.tableData, {
-			keys: ["name", "email"],
-			threshold: 0.3
-		});
-	},
 	watch: {
-		/**
-		 * Searches through the table data by a given query.
-		 * NOTE: If you have a lot of data, it's recommended to do the search on the Server Side and only display the results here.
-		 * @param value of the query
-		 */
 		searchQuery(value) {
 			let result = this.tableData;
 			if (value !== "") {
 				result = this.fuseSearch.search(this.searchQuery);
 			}
 			this.searchedData = result;
+		},
+		currentPage() {
+			this.getUsers();
+		},
+		perPage() {
+			this.getUsers();
 		}
 	}
 };

@@ -2,14 +2,11 @@
 	<div class="row d-flex justify-content-center">
 		<div class="col-lg-5 col-md-8">
 			<ValidationObserver ref="edit" v-slot="{ handleSubmit }">
-				<card
-					class="card-user"
-					v-if="company !== null && userCopy !== null"
-				>
+				<card class="card-user" v-if="userCopy !== null">
 					<h5 slot="header" class="title">Edit Profile</h5>
 					<form @submit.prevent="handleSubmit(save)">
 						<div class="row">
-							<div class="col-md-7">
+							<div class="col-md-7" v-if="company">
 								<fg-input
 									type="text"
 									label="Company"
@@ -31,6 +28,7 @@
 							</div>
 							<div class="col-md-4">
 								<fg-input
+									v-if="company"
 									type="text"
 									:disabled="true"
 									label="EmploymentType"
@@ -135,7 +133,7 @@ export default {
 				if (result.status === true) {
 					this.$notify({
 						message: "Profile updated successfuly",
-						timeout: 3000,
+						timeout: 4000,
 						icon: "now-ui-icons ui-1_bell-53",
 						horizontalAlign: "bottom",
 						verticalAlign: "right",

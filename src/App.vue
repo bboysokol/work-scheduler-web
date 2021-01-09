@@ -1,17 +1,22 @@
 <template>
 	<div>
+		<notifications></notifications>
 		<router-view></router-view>
 	</div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import cookieHelper from "./helpers/cookieHelper";
 export default {
 	computed: {
-		...mapGetters(["user"])
+		...mapGetters(["user", "isLogged", "isAppAdmin"]),
+		hasToken() {
+			return cookieHelper.hasSessionCookie();
+		}
 	},
 	methods: {
-		...mapActions(["setCompany"]),
+		...mapActions(["setCompany", "destroySession"]),
 		async getCompanyData(id) {
 			return await this.$company.getCompany(id);
 		},
@@ -21,10 +26,12 @@ export default {
 			this.setCompany(newVal.CompanyId);
 		}
 	},
-	async created() {
-		const result = await this.getCompanyData(this.user.CompanyId);
-		console.log(result);
-		if (result.status) this.setCompany(result.data);
+	async mounted() {
+		if (!this.isAppAdmin && this.isLogged) {
+			console.log(this.isAppAdmin);
+			const result = await this.getCompanyData(this.user.CompanyId);
+			if (result.status) this.setCompany(result.data);
+		}
 	},
 	watch: {
 		user(newVal) {
@@ -33,6 +40,10 @@ export default {
 			} else {
 				this.$router.push({ name: "Login" });
 			}
+		},
+		hasToken(newVal) {
+			console.log(newVal);
+			if (!newVal) this.destroySession();
 		}
 	}
 };

@@ -1,4 +1,4 @@
-import { Input, InputNumber, Popover, Tooltip } from "element-ui";
+import { Checkbox, Input, InputNumber, Popover, Tooltip } from "element-ui";
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import Button from "../components/Button.vue";
 import Card from "../components/Cards/Card.vue";
@@ -11,6 +11,7 @@ const GlobalComponents = {
 		Vue.component("drop-down", DropDown);
 		Vue.component("card", Card);
 		Vue.component("n-button", Button);
+		Vue.component("n-checkbox", Checkbox);
 		Vue.component(Input.name, Input);
 		Vue.component(InputNumber.name, InputNumber);
 		Vue.use(Tooltip);

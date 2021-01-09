@@ -87,7 +87,14 @@ const UsersTable = () =>
 	import(
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/UsersTable.vue"
 	);
-
+const UserEdit = () =>
+	import(
+		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/EditUser.vue"
+	);
+const UserAdd = () =>
+	import(
+		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/AddUser.vue"
+	);
 const CompaniesTable = () =>
 	import(
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/AdminPages/Companies/CompaniesTable.vue"
@@ -101,36 +108,57 @@ let componentsMenu = {
 	children: [
 		{
 			path: "buttons",
+			meta: {
+				auth: true
+			},
 			name: "Buttons",
 			components: { default: Buttons, header: DefaultHeader }
 		},
 		{
 			path: "grid-system",
+			meta: {
+				auth: true
+			},
 			name: "Grid System",
 			components: { default: GridSystem, header: DefaultHeader }
 		},
 		{
 			path: "panels",
+			meta: {
+				auth: true
+			},
 			name: "Panels",
 			components: { default: Panels, header: DefaultHeader }
 		},
 		{
 			path: "sweet-alert",
+			meta: {
+				auth: true
+			},
 			name: "Sweet Alert",
 			components: { default: SweetAlert, header: SweetAlertHeader }
 		},
 		{
 			path: "notifications",
+			meta: {
+				auth: true
+			},
 			name: "Notifications",
 			components: { default: Notifications, header: DefaultHeader }
 		},
 		{
 			path: "icons",
+			meta: {
+				auth: true
+			},
 			name: "Icons",
 			components: { default: Icons, header: DefaultHeader }
 		},
 		{
 			path: "typography",
+			meta: {
+				auth: true
+			},
 			name: "Typography",
 			components: { default: Typography, header: DefaultHeader }
 		}
@@ -259,6 +287,28 @@ const routes = [
 				components: { default: UsersTable, header: DefaultHeader }
 			},
 			{
+				path: "users/edit",
+				meta: {
+					admin: true
+				},
+				name: "User Edit",
+				components: {
+					default: UserEdit,
+					header: DefaultHeader
+				}
+			},
+			{
+				path: "users/add",
+				meta: {
+					admin: true
+				},
+				name: "User Add",
+				components: {
+					default: UserAdd,
+					header: DefaultHeader
+				}
+			},
+			{
 				path: "companies",
 				meta: {
 					appAdmin: true
@@ -283,11 +333,10 @@ router.beforeEach((to, from, next) => {
 	if (to.matched.some((route) => route.meta.appAdmin)) {
 		!isAppAdmin ? next({ name: "Login" }) : next();
 	} else if (to.matched.some((route) => route.meta.admin)) {
-		!isAdmin || !isModerator ? next({ name: "Login" }) : next();
+		!isAdmin && !isModerator ? next({ name: "Login" }) : next();
 	} else if (to.matched.some((route) => route.meta.auth)) {
 		!isLogged ? next({ name: "Login" }) : next();
 	} else {
-		console.log("hehe");
 		isLogged ? next({ name: "Dashboard" }) : next();
 	}
 });

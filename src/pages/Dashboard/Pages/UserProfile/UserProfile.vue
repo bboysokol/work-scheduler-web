@@ -14,14 +14,14 @@
 						<p class="description">
 							{{ user.email }}
 						</p>
-						<p class="description">
+						<p class="description" v-if="company">
 							{{ company.name }}
 						</p>
 					</div>
 					<p class="description text-center">
 						{{ `Role: ${user.role}` }}
 					</p>
-					<p class="description text-center">
+					<p class="description text-center" v-if="company">
 						{{ `Employment : ${user.EmploymentType}` }}
 					</p>
 				</div>

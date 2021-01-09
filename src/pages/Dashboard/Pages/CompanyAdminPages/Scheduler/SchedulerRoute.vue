@@ -1,7 +1,7 @@
 <template>
 	<div class="container-fluid">
 		<div class="row d-flex justify-content-center">
-			<div class="col-lg-10">
+			<div class="col-12">
 				<card class="card-calendar">
 					<scheduler></scheduler>
 				</card>

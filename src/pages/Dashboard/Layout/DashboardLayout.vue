@@ -1,6 +1,5 @@
 <template>
 	<div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
-		<notifications></notifications>
 		<side-bar>
 			<template slot="links">
 				<user-menu></user-menu>
@@ -12,6 +11,7 @@
 					}"
 				></sidebar-item>
 				<sidebar-item
+					v-if="isAdmin || isModerator"
 					:link="{
 						name: 'Scheduler',
 						icon: 'now-ui-icons media-1_album',
@@ -19,6 +19,7 @@
 					}"
 				></sidebar-item>
 				<sidebar-item
+					v-if="isAdmin || isModerator"
 					:link="{
 						name: 'Users',
 						icon: 'now-ui-icons users_single-02',
@@ -26,35 +27,13 @@
 					}"
 				></sidebar-item>
 				<sidebar-item
+					v-if="isAppAdmin"
 					:link="{
 						name: 'Companies',
 						icon: 'now-ui-icons users_single-02',
 						path: '/companies'
 					}"
 				></sidebar-item>
-				<sidebar-item
-					:link="{
-						name: 'Login',
-						path: '/login',
-						icon: 'now-ui-icons design_image'
-					}"
-				></sidebar-item>
-				<sidebar-item
-					:link="{
-						name: 'Wizard',
-						icon: 'now-ui-icons design_image'
-					}"
-				>
-					<sidebar-item
-						:link="{ name: 'Pricing', path: '/pricing' }"
-					></sidebar-item>
-					<sidebar-item
-						:link="{ name: 'Register', path: '/register' }"
-					></sidebar-item>
-					<sidebar-item
-						:link="{ name: 'Wizard', path: '/forms/wizard' }"
-					></sidebar-item>
-				</sidebar-item>
 				<sidebar-item
 					:link="{
 						name: 'Components',
@@ -158,7 +137,6 @@ function initScrollbar(className) {
 	if (hasElement(className)) {
 		new PerfectScrollbar(`.${className}`);
 	} else {
-		// try to init it later in case this component is loaded async
 		setTimeout(() => {
 			initScrollbar(className);
 		}, 100);
@@ -169,6 +147,7 @@ import TopNavbar from "./TopNavbar.vue";
 import ContentFooter from "./ContentFooter.vue";
 import UserMenu from "./Extra/UserMenu.vue";
 import { ZoomCenterTransition } from "vue2-transitions";
+import { mapGetters } from "vuex";
 
 export default {
 	components: {
@@ -183,6 +162,9 @@ export default {
 				this.$sidebar.displaySidebar(false);
 			}
 		}
+	},
+	computed: {
+		...mapGetters(["isAdmin", "isAppAdmin", "isModerator"])
 	},
 	mounted() {
 		let docClasses = document.body.classList;

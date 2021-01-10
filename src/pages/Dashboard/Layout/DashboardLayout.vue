@@ -19,6 +19,14 @@
 					}"
 				></sidebar-item>
 				<sidebar-item
+					v-if="isAdmin"
+					:link="{
+						name: 'Company',
+						icon: 'now-ui-icons users_single-02',
+						path: '/company/edit'
+					}"
+				></sidebar-item>
+				<sidebar-item
 					v-if="isAdmin || isModerator"
 					:link="{
 						name: 'Users',

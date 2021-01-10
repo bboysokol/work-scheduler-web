@@ -91,6 +91,10 @@ const UserEdit = () =>
 	import(
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/EditUser.vue"
 	);
+const CompanyEdit = () =>
+	import(
+		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Company/EditCompany.vue"
+	);
 const UserAdd = () =>
 	import(
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Users/AddUser.vue"
@@ -285,6 +289,14 @@ const routes = [
 				},
 				name: "Users Table",
 				components: { default: UsersTable, header: DefaultHeader }
+			},
+			{
+				path: "company/edit",
+				meta: {
+					admin: true
+				},
+				name: "Company Edit",
+				components: { default: CompanyEdit, header: DefaultHeader }
 			},
 			{
 				path: "users/edit",

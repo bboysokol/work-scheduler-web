@@ -57,8 +57,6 @@ Vue.axios.interceptors.response.use(
 				}
 			};
 		}
-		console.log(error.response.data.Message);
-		console.log(Vue.prototype.$notify);
 		Vue.prototype.$notify({
 			message: error.response.data.Message,
 			timeout: 3000,

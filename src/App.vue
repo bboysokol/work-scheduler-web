@@ -28,7 +28,6 @@ export default {
 	},
 	async mounted() {
 		if (!this.isAppAdmin && this.isLogged) {
-			console.log(this.isAppAdmin);
 			const result = await this.getCompanyData(this.user.CompanyId);
 			if (result.status) this.setCompany(result.data);
 		}
@@ -42,7 +41,6 @@ export default {
 			}
 		},
 		hasToken(newVal) {
-			console.log(newVal);
 			if (!newVal) this.destroySession();
 		}
 	}

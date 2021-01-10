@@ -12,7 +12,7 @@
 
 						<div>
 							<ValidationProvider
-								name="email"
+								name="Email"
 								rules="required|email"
 								v-slot="{ passed, errors }"
 							>
@@ -29,7 +29,7 @@
 							</ValidationProvider>
 
 							<ValidationProvider
-								name="password"
+								name="Password"
 								rules="required|min:5"
 								v-slot="{ passed, errors }"
 							>
@@ -93,11 +93,10 @@ export default {
 		async login() {
 			let isValidForm = await this.$refs.login.validate();
 			if (isValidForm) {
-				const result = await this.$auth.logIn({
+				await this.$auth.logIn({
 					email: this.email,
 					password: this.password
 				});
-				console.log(result);
 			}
 		},
 		submit() {

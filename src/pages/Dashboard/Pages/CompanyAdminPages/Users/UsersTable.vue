@@ -5,7 +5,7 @@
 				<div
 					class="col-12 d-flex justify-content-center justify-content-sm-between align-items-center flex-wrap"
 				>
-					<h4 slot="header" class="card-title">Paginated Tables</h4>
+					<h4 slot="header" class="card-title">Employees</h4>
 					<router-link :to="{ name: 'User Add' }">
 						<n-button type="success" round>
 							Add User

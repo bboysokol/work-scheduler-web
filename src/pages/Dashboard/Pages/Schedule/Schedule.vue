@@ -6,11 +6,11 @@
 		:plugins="calendarPlugins"
 		:events="shifts"
 		:selectable="true"
-		@dateClick="dateClick"
+		@eventClick="dateClick"
 		:header="header"
 		:buttonIcons="buttonIcons"
 		:selectHelper="true"
-		:editable="true"
+		:editable="false"
 	/>
 </template>
 <script>
@@ -45,29 +45,30 @@ export default {
 		};
 	},
 	methods: {
-		dateClick: function(info) {
-			// on select we show the Sweet Alert modal with an input
-			Swal.fire({
-				title: "Create an Event",
-				html: `<div class="form-group">
-          <input type="text" id="vnud-input" class="form-control">
-          </div>`,
-				showCancelButton: true,
-				confirmButtonClass: "btn btn-success",
-				cancelButtonClass: "btn btn-danger",
-				buttonsStyling: false
-			}).then(() => {
-				var eventTitle = document.getElementById("vnud-input").value;
-				if (eventTitle) {
-					let calendarApi = this.$refs.calendar.getApi();
-					calendarApi.addEvent({
-						title: eventTitle,
-						start: info.dateStr,
-						className: "event-azure",
-						allDay: true
-					});
-				}
-			});
+		dateClick(info) {
+			if (info.event.classNames.includes("event-red"))
+				Swal.fire({
+					title: "Are you sure?",
+					text: `You won't be able to revert this!`,
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonClass: "btn btn-success btn-fill",
+					cancelButtonClass: "btn btn-danger btn-fill",
+					confirmButtonText: "Yes, delete it!",
+					buttonsStyling: false
+				}).then((result) => {
+					if (result.value) {
+						this.deleteShift(+info.event.title.split("-")[1]);
+						info.event.remove();
+						Swal.fire({
+							title: "Deleted!",
+							text: `You deleted a shift`,
+							type: "success",
+							confirmButtonClass: "btn btn-success btn-fill",
+							buttonsStyling: false
+						});
+					}
+				});
 		},
 		async fetchShifts() {
 			this.isLoading = true;
@@ -97,16 +98,18 @@ export default {
 								temporaryEnd.getTimezoneOffset() / 60
 						)
 					),
-					title: shift.isBlocked ? "Blocked shift" : "Shift",
+					title: shift.isBlocked ? `Blocked-${shift.id}` : "Shift",
 					allDay: false,
-					className: shift.isBlocked ? "event-red" : "event-azure",
-					id: shift.id
+					className: shift.isBlocked ? "event-red" : "event-azure"
 				};
 			});
 			this.isLoading = false;
 		},
 		async clearShifts() {
 			this.shifts.length = 0;
+		},
+		async deleteShift(id) {
+			await this.$shift.deleteShift(id);
 		}
 	}
 };

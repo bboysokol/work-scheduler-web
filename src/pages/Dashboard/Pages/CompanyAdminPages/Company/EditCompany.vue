@@ -2,7 +2,7 @@
 	<div class="row d-flex justify-content-center">
 		<div class="col-lg-5 col-md-8">
 			<ValidationObserver ref="edit" v-slot="{ handleSubmit }">
-				<card class="card-user" v-if="company !== null">
+				<card class="card-user" v-if="companyCopy !== null">
 					<h5 slot="header" class="title">Edit Company</h5>
 					<form @submit.prevent="handleSubmit(save)">
 						<div class="row">
@@ -74,26 +74,33 @@ export default {
 	mounted() {
 		this.companyCopy = this.company;
 	},
+	watch: {
+		company(newVal) {
+			this.companyCopy = newVal;
+		}
+	},
 	methods: {
 		async save() {
-			// let isValidForm = await this.$refs.edit.validate();
-			// if (isValidForm) {
-			// 	const result = await this.$user.updateUser(this.userCopy.id, {
-			// 		email: this.userCopy.email,
-			// 		role: this.userCopy.role
-			// 	});
-			// 	if (result.status === true) {
-			// 		this.$notify({
-			// 			message: "User updated successfuly",
-			// 			timeout: 4000,
-			// 			icon: "now-ui-icons ui-1_bell-53",
-			// 			horizontalAlign: "bottom",
-			// 			verticalAlign: "right",
-			// 			type: "success"
-			// 		});
-			// 		this.$router.push({ name: "Users Table" });
-			// 	}
-			// }
+			let isValidForm = await this.$refs.edit.validate();
+			if (isValidForm) {
+				const result = await this.$company.updateCompany(
+					this.companyCopy.id,
+					{
+						name: this.companyCopy.name,
+						tier: this.companyCopy.tier
+					}
+				);
+				if (result.status === true) {
+					this.$notify({
+						message: "Company updated successfuly",
+						timeout: 4000,
+						icon: "now-ui-icons ui-1_bell-53",
+						horizontalAlign: "bottom",
+						verticalAlign: "right",
+						type: "success"
+					});
+				}
+			}
 		}
 	}
 };

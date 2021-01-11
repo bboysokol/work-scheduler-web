@@ -46,6 +46,7 @@
 										is-range
 										v-model="newShift.time"
 										range-separator="To"
+										format="HH:mm"
 										start-placeholder="Start time"
 										end-placeholder="End time"
 									>
@@ -237,7 +238,44 @@
 					</div>
 				</card>
 				<card class="card-calendar">
+					<div
+						class="col-12 d-flex justify-content-between align-items-center flex-column flex-md-row"
+					>
+						<h5>
+							{{
+								`${dateRange.start.toDateString()} - ${dateRange.end.toDateString()}`
+							}}
+						</h5>
+						<div class="d-flex flex-column flex-md-row mb-3">
+							<n-button
+								@click.native="move(-1)"
+								type="primary"
+								icon
+								round
+							>
+								<i class="now-ui-icons arrows-1_minimal-left">
+								</i>
+							</n-button>
+							<n-button
+								@click.native="setToday()"
+								type="primary"
+								round
+							>
+								Today
+							</n-button>
+							<n-button
+								@click.native="move(1)"
+								type="primary"
+								icon
+								round
+							>
+								<i class="now-ui-icons arrows-1_minimal-right">
+								</i>
+							</n-button>
+						</div>
+					</div>
 					<scheduler
+						:dateRange="dateRange"
 						@edited="setEdited"
 						@shiftPicked="editRow"
 					></scheduler>
@@ -282,8 +320,15 @@ export default {
 				range: [],
 				employeeLimit: 1
 			},
-			availableUsers: []
+			availableUsers: [],
+			dateRange: {
+				start: null,
+				end: null
+			}
 		};
+	},
+	created() {
+		this.setToday();
 	},
 	components: {
 		Scheduler,
@@ -322,13 +367,44 @@ export default {
 				});
 			}
 			const result = await this.$schedule.generateSchedule(shift);
-			console.log(result);
+			if (result.status)
+				this.$notify({
+					message:
+						"Schedule generated successfuly. Refresh page for results",
+					timeout: 4000,
+					icon: "now-ui-icons ui-1_bell-53",
+					horizontalAlign: "bottom",
+					verticalAlign: "right",
+					type: "success"
+				});
 		},
 		createShift() {
 			console.log(this.newShift);
 		},
 		updateShift() {
 			console.log(this.editedShift);
+		},
+		move(state) {
+			this.dateRange.start = new Date(
+				this.dateRange.start.setDate(
+					this.dateRange.start.getDate() + 7 * state
+				)
+			);
+			this.dateRange.end = new Date(
+				this.dateRange.end.setDate(
+					this.dateRange.end.getDate() + 7 * state
+				)
+			);
+		},
+		setToday() {
+			const today = new Date();
+			const dayOfWeek = today.getUTCDay();
+			this.dateRange.start = new Date(
+				new Date().setDate(today.getDate() - dayOfWeek + 1)
+			);
+			this.dateRange.end = new Date(
+				new Date().setDate(today.getDate() + (7 - dayOfWeek))
+			);
 		}
 	}
 };

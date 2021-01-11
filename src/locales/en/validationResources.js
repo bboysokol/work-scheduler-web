@@ -7,7 +7,13 @@ const en = {
 		Email: "Email",
 		LastName: "Last Name",
 		RepeatPassword: "Repeat Password",
-		CompanyName: "Company Name"
+		CompanyName: "Company Name",
+		TimeRangeStart: "Time Range Start",
+		TimeRangeEnd: "Time Range End",
+		TimeRange: "Time Range",
+		Date: "Date",
+		DateRange: "DateRange",
+		User: "User"
 	},
 	validation: english.messages
 };

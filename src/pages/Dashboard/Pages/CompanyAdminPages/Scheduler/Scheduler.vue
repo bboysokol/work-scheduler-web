@@ -15,8 +15,8 @@
 				</tr>
 			</thead>
 
-			<tbody>
-				<tr v-for="(day, index) in schedules" :key="index">
+			<tbody v-if="!isLoading">
+				<tr v-for="day in schedules" :key="day.name">
 					<td class="text-center">
 						{{ day.name }}
 					</td>
@@ -53,25 +53,18 @@
 </template>
 <script>
 export default {
-	async mounted() {
-		const result = await this.$schedule.getSchedules({
-			startDate: new Date(2021, 0, 5),
-			endDate: new Date(2021, 0, 11)
-		});
-		const shifts = [];
-		result.data.forEach((schedule) => {
-			this.schedules[
-				new Date(schedule.date).getUTCDay()
-			].shifts = schedule.workingTimeRegisters.map((shift) => ({
-				start: new Date(shift.startTime),
-				end: new Date(shift.endTime),
-				fullname: `${shift.user.personalData.firstName} ${shift.user.personalData.lastName}`
-			}));
-		});
-		console.log(shifts);
+	props: {
+		dateRange: {
+			required: true,
+			type: Object
+		}
+	},
+	mounted() {
+		this.fetchSchedule();
 	},
 	data() {
 		return {
+			isLoading: true,
 			schedules: [
 				{ name: "Monday", shifts: [] },
 				{ name: "Tuesday", shifts: [] },
@@ -90,6 +83,52 @@ export default {
 		},
 		editRow(row) {
 			this.$emit("shiftPicked", row);
+		},
+		async fetchSchedule() {
+			this.isLoading = true;
+			this.clearShifts();
+
+			const result = await this.$schedule.getSchedules({
+				startDate: this.dateRange.start,
+				endDate: this.dateRange.end
+			});
+			result.data.forEach((schedule) => {
+				this.schedules[
+					new Date(schedule.date).getUTCDay()
+				].shifts = schedule.workingTimeRegisters.map((shift) => {
+					const temporaryStart = new Date(shift.startTime);
+					const temporaryEnd = new Date(shift.endTime);
+					return {
+						start: new Date(
+							temporaryStart.setHours(
+								temporaryStart.getHours() -
+									temporaryStart.getTimezoneOffset() / 60
+							)
+						),
+						end: new Date(
+							temporaryEnd.setHours(
+								temporaryEnd.getHours() -
+									temporaryEnd.getTimezoneOffset() / 60
+							)
+						),
+						fullname: `${shift.user.personalData.firstName} ${shift.user.personalData.lastName}`
+					};
+				});
+			});
+			this.isLoading = false;
+		},
+		async clearShifts() {
+			await this.schedules.forEach(
+				(schedule) => (schedule.shifts.length = 0)
+			);
+		}
+	},
+	watch: {
+		dateRange: {
+			deep: true,
+			handler() {
+				this.fetchSchedule();
+			}
 		}
 	}
 };

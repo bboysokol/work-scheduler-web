@@ -2,8 +2,9 @@
 	<div class="wrapper" :class="{ 'nav-open': $sidebar.showSidebar }">
 		<side-bar>
 			<template slot="links">
-				<user-menu></user-menu>
+				<user-menu v-if="isLogged"></user-menu>
 				<sidebar-item
+					v-if="isLogged && !isAdmin && !isAppAdmin"
 					:link="{
 						name: 'Schedule',
 						icon: 'now-ui-icons media-1_album',
@@ -14,7 +15,7 @@
 					v-if="isAdmin || isModerator"
 					:link="{
 						name: 'Scheduler',
-						icon: 'now-ui-icons media-1_album',
+						icon: 'now-ui-icons el-icon-magic-stick',
 						path: '/scheduler'
 					}"
 				></sidebar-item>
@@ -22,7 +23,7 @@
 					v-if="isAdmin"
 					:link="{
 						name: 'Company',
-						icon: 'now-ui-icons users_single-02',
+						icon: 'now-ui-icons el-icon-office-building',
 						path: '/company/edit'
 					}"
 				></sidebar-item>
@@ -42,78 +43,6 @@
 						path: '/companies'
 					}"
 				></sidebar-item>
-				<sidebar-item
-					:link="{
-						name: 'Components',
-						icon: 'now-ui-icons education_atom'
-					}"
-				>
-					<sidebar-item
-						:link="{ name: 'Buttons', path: '/components/buttons' }"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Grid System',
-							path: '/components/grid-system'
-						}"
-					></sidebar-item>
-					<sidebar-item
-						:link="{ name: 'Panels', path: '/components/panels' }"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Sweet Alert',
-							path: '/components/sweet-alert'
-						}"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Notifications',
-							path: '/components/notifications'
-						}"
-					></sidebar-item>
-					<sidebar-item
-						:link="{ name: 'Icons', path: '/components/icons' }"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Typography',
-							path: '/components/typography'
-						}"
-					></sidebar-item>
-				</sidebar-item>
-				<sidebar-item
-					:link="{
-						name: 'Forms',
-						icon: 'now-ui-icons files_single-copy-04'
-					}"
-				>
-					<sidebar-item
-						:link="{
-							name: 'Regular Forms',
-							path: '/forms/regular'
-						}"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Extended Forms',
-							path: '/forms/extended'
-						}"
-					></sidebar-item>
-					<sidebar-item
-						:link="{
-							name: 'Validation Forms',
-							path: '/forms/validation'
-						}"
-					></sidebar-item>
-				</sidebar-item>
-				<sidebar-item
-					:link="{
-						name: 'Forms',
-						icon: 'now-ui-icons files_single-copy-04'
-					}"
-				>
-				</sidebar-item>
 			</template>
 		</side-bar>
 		<div class="main-panel">
@@ -172,7 +101,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(["isAdmin", "isAppAdmin", "isModerator"])
+		...mapGetters(["isAdmin", "isAppAdmin", "isModerator", "isLogged"])
 	},
 	mounted() {
 		let docClasses = document.body.classList;

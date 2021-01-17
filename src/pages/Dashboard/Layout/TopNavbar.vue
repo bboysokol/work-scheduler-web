@@ -39,7 +39,7 @@
 				</drop-down>
 
 				<li class="nav-item">
-					<router-link class="nav-link" :to="{ name: 'User Page' }">
+					<router-link class="nav-link" :to="{ name: 'UserProfile' }">
 						<i class="now-ui-icons users_single-02"></i>
 						<p>
 							<span class="d-lg-none d-md-block">Account</span>

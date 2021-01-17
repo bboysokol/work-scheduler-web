@@ -8,11 +8,12 @@
 							<i class="now-ui-icons media-2_sound-wave"></i>
 						</div>
 						<div class="description">
-							<h5 class="info-title">Marketing</h5>
+							<h5 class="info-title">
+								Auto generating schedules
+							</h5>
 							<p class="description">
-								We've created the marketing campaign of the
-								website. It was a very interesting
-								collaboration.
+								Employees determine the availability on the
+								basis of which the schedule is generated
 							</p>
 						</div>
 					</div>
@@ -22,10 +23,10 @@
 							<i class="now-ui-icons media-1_button-pause"></i>
 						</div>
 						<div class="description">
-							<h5 class="info-title">Fully Coded in HTML5</h5>
+							<h5 class="info-title">Saving time</h5>
 							<p class="description">
-								We've developed the website with HTML5 and CSS3.
-								The client has access to the code using GitHub.
+								The schedule arranges itself, and you can take a
+								nap
 							</p>
 						</div>
 					</div>
@@ -35,10 +36,9 @@
 							<i class="now-ui-icons users_single-02"></i>
 						</div>
 						<div class="description">
-							<h5 class="info-title">Built Audience</h5>
+							<h5 class="info-title">Employee management</h5>
 							<p class="description">
-								There is also a Fully Customizable CMS Admin
-								Dashboard for this product.
+								Easily managed panel for managing employees
 							</p>
 						</div>
 					</div>

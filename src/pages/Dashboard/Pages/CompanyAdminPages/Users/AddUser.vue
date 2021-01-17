@@ -6,7 +6,10 @@
 					<h5 slot="header" class="title">New User</h5>
 					<form @submit.prevent="handleSubmit(save)">
 						<div class="row">
-							<div class="col-12">
+							<div class=" col-12 col-md-6">
+								<label class="mb-0">
+									Role
+								</label>
 								<el-select
 									class="select-danger"
 									v-model="user.role"
@@ -20,6 +23,33 @@
 									>
 									</el-option>
 								</el-select>
+							</div>
+							<div class="col-12 col-md-4">
+								<ValidationProvider
+									name="EmploymentType"
+									rules="required"
+									v-slot="{ passed, errors }"
+								>
+									<label class="mb-0">
+										Employment Type
+									</label>
+
+									<el-select
+										class="select-danger"
+										:error="errors[0]"
+										:hasSuccess="passed"
+										v-model="user.employmentType"
+									>
+										<el-option
+											v-for="option in employmentTypes"
+											class="select-danger"
+											:value="option.value"
+											:label="option.label"
+											:key="option.label"
+										>
+										</el-option>
+									</el-select>
+								</ValidationProvider>
 							</div>
 							<div class="col-12">
 								<ValidationProvider
@@ -94,6 +124,7 @@
 </template>
 <script>
 import { Select, Option } from "element-ui";
+import { mapGetters } from "vuex";
 export default {
 	components: {
 		[Select.name]: Select,
@@ -106,14 +137,29 @@ export default {
 				firstName: "",
 				lastName: "",
 				email: "",
-				role: "Employee"
+				role: "Employee",
+				employmentType: 1
 			},
 			roles: [
-				{ value: "Admin", label: "Admin" },
-				{ value: "Moderator", label: "Moderator" },
-				{ value: "Employee", label: "Employee" }
+				{ value: "Admin", label: "Admin", forAdmin: true },
+				{ value: "Moderator", label: "Moderator", forAdmin: false },
+				{ value: "Employee", label: "Employee", forAdmin: false }
+			],
+			employmentTypes: [
+				{ value: 1, label: "1" },
+				{ value: 0.75, label: "3/4" },
+				{ value: 0.5, label: "1/2" },
+				{ value: 0, label: "0" }
 			]
 		};
+	},
+	computed: {
+		...mapGetters(["isAdmin"]),
+		availableRoles() {
+			return this.roles.filter(
+				(i) => !i.forAdmin || (this.isAdmin && i.forAdmin)
+			);
+		}
 	},
 	methods: {
 		async save() {
@@ -125,8 +171,8 @@ export default {
 						message: "User added successfuly",
 						timeout: 4000,
 						icon: "now-ui-icons ui-1_bell-53",
-						horizontalAlign: "bottom",
-						verticalAlign: "right",
+						horizontalAlign: "right",
+						verticalAlign: "top",
 						type: "success"
 					});
 					this.$router.push({ name: "Users Table" });

@@ -23,7 +23,7 @@
 							<li>
 								<router-link
 									tag="a"
-									:to="{ name: 'User Page' }"
+									:to="{ name: 'UserProfile' }"
 								>
 									<span class="sidebar-mini-icon">MP</span>
 									<span class="sidebar-normal"

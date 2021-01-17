@@ -89,7 +89,9 @@
 								</n-button>
 								<n-button
 									v-if="
-										!isAdmin || props.row.role !== 'Admin'
+										(!isAdmin ||
+											props.row.role !== 'Admin') &&
+											!props.row.isDeleted
 									"
 									@click.native="
 										handleDelete(props.$index, props.row)
@@ -235,25 +237,20 @@ export default {
 			}).then((result) => {
 				if (result.value) {
 					this.deleteRow(row);
-					Swal.fire({
-						title: "Deleted!",
-						text: `You deleted ${row.name}`,
-						type: "success",
-						confirmButtonClass: "btn btn-success btn-fill",
-						buttonsStyling: false
-					});
 				}
 			});
 		},
 		async deleteRow(row) {
 			const result = await this.$user.deleteUser(row.id);
 			if (result.status) {
-				let indexToDelete = this.tableData.findIndex(
-					(tableRow) => tableRow.id === row.id
-				);
-				if (indexToDelete >= 0) {
-					this.tableData.splice(indexToDelete, 1);
-				}
+				Swal.fire({
+					title: "Deleted!",
+					text: `You deleted ${row.personalData.firstName} ${row.personalData.lastName} `,
+					type: "success",
+					confirmButtonClass: "btn btn-success btn-fill",
+					buttonsStyling: false
+				});
+				this.getUsers();
 			}
 		}
 	},

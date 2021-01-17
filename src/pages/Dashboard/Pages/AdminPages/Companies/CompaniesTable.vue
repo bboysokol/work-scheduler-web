@@ -53,18 +53,6 @@
 							<div slot-scope="props" class="table-actions">
 								<n-button
 									@click.native="
-										handleEdit(props.$index, props.row)
-									"
-									class="edit"
-									type="warning"
-									size="sm"
-									round
-									icon
-								>
-									<i class="fa fa-calendar"></i>
-								</n-button>
-								<n-button
-									@click.native="
 										handleDelete(props.$index, props.row)
 									"
 									class="remove"
@@ -174,14 +162,6 @@ export default {
 				this.pagination.total = result.data.count;
 				this.tableData = result.data.results;
 			}
-		},
-		handleEdit(index, row) {
-			Swal.fire({
-				title: `You want to edit ${row.name}`,
-				html: "<h3>asdad</h3>",
-				buttonsStyling: false,
-				confirmButtonClass: "btn btn-info btn-fill"
-			});
 		},
 		handleDelete(index, row) {
 			Swal.fire({

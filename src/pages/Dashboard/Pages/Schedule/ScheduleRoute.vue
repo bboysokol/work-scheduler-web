@@ -72,7 +72,7 @@
 					</div>
 				</card>
 				<card class="card-calendar">
-					<schedule></schedule>
+					<schedule :refresh="refresh"></schedule>
 				</card>
 			</div>
 		</div>
@@ -95,7 +95,8 @@ export default {
 	},
 	data() {
 		return {
-			newShift: {}
+			newShift: {},
+			refresh: false
 		};
 	},
 	methods: {
@@ -123,10 +124,11 @@ export default {
 						message: "Shift created successfuly",
 						timeout: 4000,
 						icon: "now-ui-icons ui-1_bell-53",
-						horizontalAlign: "bottom",
-						verticalAlign: "right",
+						horizontalAlign: "right",
+						verticalAlign: "top",
 						type: "success"
 					});
+					this.refresh = !this.refresh;
 				}
 			}
 		}

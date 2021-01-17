@@ -41,7 +41,7 @@ export default function(Vue) {
 		async deleteUser(id) {
 			const result = await requestSender.send({
 				method: "delete",
-				url: `/users/${+id}`
+				url: `/users/${id}`
 			});
 			return result;
 		}

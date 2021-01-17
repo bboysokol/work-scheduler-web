@@ -61,8 +61,8 @@ Vue.axios.interceptors.response.use(
 			message: error.response.data.Message,
 			timeout: 3000,
 			icon: "now-ui-icons ui-1_bell-53",
-			horizontalAlign: "bottom",
-			verticalAlign: "right",
+			horizontalAlign: "right",
+			verticalAlign: "top",
 			type: "danger"
 		});
 		return Promise.reject(errorResponse);

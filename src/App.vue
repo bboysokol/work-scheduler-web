@@ -8,6 +8,7 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import cookieHelper from "./helpers/cookieHelper";
+import roleRedirect from "./helpers/dictionaries/roleRedirect";
 export default {
 	computed: {
 		...mapGetters(["user", "isLogged", "isAppAdmin"]),
@@ -21,9 +22,11 @@ export default {
 			return await this.$company.getCompany(id);
 		},
 		restoreSession(newVal) {
-			this.getCompanyData(newVal.CompanyId);
-			this.$router.push({ name: "Dashboard" });
-			this.setCompany(newVal.CompanyId);
+			if (!this.isAppAdmin) {
+				this.getCompanyData(newVal.CompanyId);
+				this.setCompany(newVal.CompanyId);
+			}
+			this.$router.push(roleRedirect[this.user.role]);
 		}
 	},
 	async mounted() {

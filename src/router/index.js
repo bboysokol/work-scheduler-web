@@ -1,4 +1,3 @@
-import SweetAlertHeader from "src/pages/Dashboard/Components/Headers/SweetAlertHeader";
 import DefaultHeader from "src/pages/Dashboard/DefaultHeader";
 import DashboardLayout from "src/pages/Dashboard/Layout/DashboardLayout.vue";
 import AuthLayout from "src/pages/Dashboard/Pages/AuthLayout.vue";
@@ -6,9 +5,9 @@ import SchedulerHeader from "src/pages/Dashboard/Pages/CompanyAdminPages/Schedul
 import ScheduleHeader from "src/pages/Dashboard/Pages/Schedule/ScheduleHeader";
 import NotFound from "src/pages/GeneralViews/NotFoundPage.vue";
 import VueRouter from "vue-router";
+import roleRedirect from "../helpers/dictionaries/roleRedirect";
 import store from "../store";
 
-// Calendar
 const Schedule = () =>
 	import(
 		/* webpackChunkName: "calendar" */ "src/pages/Dashboard/Pages/Schedule/ScheduleRoute.vue"
@@ -17,44 +16,7 @@ const Scheduler = () =>
 	import(
 		/* webpackChunkName: "calendar" */ "src/pages/Dashboard/Pages/CompanyAdminPages/Scheduler/SchedulerRoute.vue"
 	);
-// Components pages
-const Buttons = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/Buttons.vue"
-	);
-const GridSystem = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/GridSystem.vue"
-	);
-const Panels = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/Panels.vue"
-	);
-const SweetAlert = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/SweetAlert.vue"
-	);
-const Notifications = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/Notifications.vue"
-	);
-const Icons = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/Icons.vue"
-	);
-const Typography = () =>
-	import(
-		/* webpackChunkName: "components" */ "src/pages/Dashboard/Components/Typography.vue"
-	);
 
-// Forms pages
-const RegularForms = () => import("src/pages/Dashboard/Forms/RegularForms.vue");
-const ExtendedForms = () =>
-	import("src/pages/Dashboard/Forms/ExtendedForms.vue");
-const ValidationForms = () =>
-	import("src/pages/Dashboard/Forms/ValidationForms.vue");
-
-// Pages
 const User = () =>
 	import(
 		/* webpackChunkName: "pages" */ "src/pages/Dashboard/Pages/UserProfile/UserProfile.vue"
@@ -104,112 +66,24 @@ const CompaniesTable = () =>
 		/* webpackChunkName: "tables" */ "src/pages/Dashboard/Pages/AdminPages/Companies/CompaniesTable.vue"
 	);
 
-let componentsMenu = {
-	path: "/components",
-	component: DashboardLayout,
-	redirect: "/components/buttons",
-	name: "Components",
-	children: [
-		{
-			path: "buttons",
-			meta: {
-				auth: true
-			},
-			name: "Buttons",
-			components: { default: Buttons, header: DefaultHeader }
-		},
-		{
-			path: "grid-system",
-			meta: {
-				auth: true
-			},
-			name: "Grid System",
-			components: { default: GridSystem, header: DefaultHeader }
-		},
-		{
-			path: "panels",
-			meta: {
-				auth: true
-			},
-			name: "Panels",
-			components: { default: Panels, header: DefaultHeader }
-		},
-		{
-			path: "sweet-alert",
-			meta: {
-				auth: true
-			},
-			name: "Sweet Alert",
-			components: { default: SweetAlert, header: SweetAlertHeader }
-		},
-		{
-			path: "notifications",
-			meta: {
-				auth: true
-			},
-			name: "Notifications",
-			components: { default: Notifications, header: DefaultHeader }
-		},
-		{
-			path: "icons",
-			meta: {
-				auth: true
-			},
-			name: "Icons",
-			components: { default: Icons, header: DefaultHeader }
-		},
-		{
-			path: "typography",
-			meta: {
-				auth: true
-			},
-			name: "Typography",
-			components: { default: Typography, header: DefaultHeader }
-		}
-	]
-};
-let formsMenu = {
-	path: "/forms",
-	component: DashboardLayout,
-	redirect: "/forms/regular",
-	name: "Forms",
-	children: [
-		{
-			path: "regular",
-			name: "Regular Forms",
-			components: { default: RegularForms, header: DefaultHeader }
-		},
-		{
-			path: "extended",
-			name: "Extended Forms",
-			components: { default: ExtendedForms, header: DefaultHeader }
-		},
-		{
-			path: "validation",
-			name: "Validation Forms",
-			components: { default: ValidationForms, header: DefaultHeader }
-		}
-	]
-};
-
-let pagesMenu = {
+let userPages = {
 	path: "/user",
 	component: DashboardLayout,
 	name: "Pages",
-	redirect: "/pages/user",
+	redirect: "/user/me",
 	children: [
 		{
 			path: "me",
 			meta: {
-				auth: true
+				forEmployees: true
 			},
-			name: "User Page",
+			name: "UserProfile",
 			components: { default: User, header: DefaultHeader }
 		},
 		{
 			path: "edit",
 			meta: {
-				auth: true
+				forEmployees: true
 			},
 			name: "Edit Profile",
 			components: { default: EditUser, header: DefaultHeader }
@@ -256,9 +130,7 @@ const routes = [
 		redirect: "/schedule",
 		name: "Home"
 	},
-	componentsMenu,
-	formsMenu,
-	pagesMenu,
+	userPages,
 	authPages,
 	{
 		path: "/",
@@ -293,7 +165,7 @@ const routes = [
 			{
 				path: "company/edit",
 				meta: {
-					admin: true
+					adminOnly: true
 				},
 				name: "Company Edit",
 				components: { default: CompanyEdit, header: DefaultHeader }
@@ -341,15 +213,21 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	store.dispatch("restoreSession");
-	const { isAppAdmin, isAdmin, isModerator, isLogged } = store.getters;
+
+	const { isAppAdmin, isAdmin, isModerator, isLogged, user } = store.getters;
+
 	if (to.matched.some((route) => route.meta.appAdmin)) {
 		!isAppAdmin ? next({ name: "Login" }) : next();
+	} else if (to.matched.some((route) => route.meta.adminOnly)) {
+		!isAdmin ? next({ name: "Login" }) : next();
 	} else if (to.matched.some((route) => route.meta.admin)) {
 		!isAdmin && !isModerator ? next({ name: "Login" }) : next();
 	} else if (to.matched.some((route) => route.meta.auth)) {
+		!isLogged || isAppAdmin || isAdmin ? next({ name: "Login" }) : next();
+	} else if (to.matched.some((route) => route.meta.forEmployees)) {
 		!isLogged ? next({ name: "Login" }) : next();
 	} else {
-		isLogged ? next({ name: "Dashboard" }) : next();
+		isLogged ? next(roleRedirect[user.role]) : next();
 	}
 });
 

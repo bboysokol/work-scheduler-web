@@ -81,8 +81,8 @@ export default {
 						message: "Company created, now you can login",
 						timeout: 4000,
 						icon: "now-ui-icons ui-1_bell-53",
-						horizontalAlign: "bottom",
-						verticalAlign: "right",
+						horizontalAlign: "right",
+						verticalAlign: "top",
 						type: "success"
 					});
 					this.$router.push({ name: "Login" });

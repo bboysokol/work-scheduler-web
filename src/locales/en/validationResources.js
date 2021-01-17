@@ -13,7 +13,8 @@ const en = {
 		TimeRange: "Time Range",
 		Date: "Date",
 		DateRange: "DateRange",
-		User: "User"
+		User: "User",
+		EmploymentType: "Employment Type"
 	},
 	validation: english.messages
 };

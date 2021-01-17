@@ -47,7 +47,7 @@ export default new Vuex.Store({
 		},
 		destroySession({ commit }) {
 			commit("storeUser", null);
-			commit("setCompany", null);
+			commit("storeCompany", null);
 			cookieHelper.deleteSessionCookie();
 		}
 	}

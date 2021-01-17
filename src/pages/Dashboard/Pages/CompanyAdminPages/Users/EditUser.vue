@@ -6,13 +6,14 @@
 					<h5 slot="header" class="title">Edit User</h5>
 					<form @submit.prevent="handleSubmit(save)">
 						<div class="row">
-							<div class="col-12">
+							<div class="col-6">
+								<label class="mb-0"> Role </label>
 								<el-select
 									class="select-danger"
 									v-model="userCopy.role"
 								>
 									<el-option
-										v-for="option in roles"
+										v-for="option in availableRoles"
 										class="select-danger"
 										:value="option.value"
 										:label="option.label"
@@ -22,16 +23,33 @@
 								</el-select>
 							</div>
 							<div class="col-md-4">
-								<fg-input
-									type="text"
-									:disabled="true"
-									label="EmploymentType"
-									placeholder="EmploymentType"
-									v-model="
-										userCopy.personalData.employmentType
-									"
+								<ValidationProvider
+									name="EmploymentType"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-								</fg-input>
+									<label class="mb-0">
+										Employment Type
+									</label>
+
+									<el-select
+										class="select-danger"
+										:error="errors[0]"
+										:hasSuccess="passed"
+										v-model="
+											userCopy.personalData.employmentType
+										"
+									>
+										<el-option
+											v-for="option in employmentTypes"
+											class="select-danger"
+											:value="option.value"
+											:label="option.label"
+											:key="option.label"
+										>
+										</el-option>
+									</el-select>
+								</ValidationProvider>
 							</div>
 							<div class="col-md-8">
 								<ValidationProvider
@@ -92,6 +110,8 @@
 </template>
 <script>
 import { Select, Option } from "element-ui";
+import { mapGetters } from "vuex";
+
 export default {
 	components: {
 		[Select.name]: Select,
@@ -102,18 +122,29 @@ export default {
 			test: "",
 			userCopy: null,
 			roles: [
-				{ value: "Admin", label: "Admin" },
-				{ value: "Moderator", label: "Moderator" },
-				{ value: "Employee", label: "Employee" }
+				{ value: "Admin", label: "Admin", forAdmin: true },
+				{ value: "Moderator", label: "Moderator", forAdmin: false },
+				{ value: "Employee", label: "Employee", forAdmin: false }
+			],
+			employmentTypes: [
+				{ value: 1, label: "1" },
+				{ value: 0.75, label: "3/4" },
+				{ value: 0.5, label: "1/2" },
+				{ value: 0, label: "0" }
 			]
 		};
+	},
+	computed: {
+		...mapGetters(["isAdmin"]),
+		availableRoles() {
+			return this.roles.filter(
+				(i) => !i.forAdmin || (this.isAdmin && i.forAdmin)
+			);
+		}
 	},
 	mounted() {
 		if (this.$route.params.user) {
 			this.userCopy = { ...this.$route.params.user };
-			const fullname = this.userCopy.Fullname.split(" ");
-			this.userCopy.firstName = fullname[0];
-			this.userCopy.lastName = fullname[1];
 		} else this.$router.push({ name: "Users Table" });
 	},
 	methods: {
@@ -129,8 +160,8 @@ export default {
 						message: "User updated successfuly",
 						timeout: 4000,
 						icon: "now-ui-icons ui-1_bell-53",
-						horizontalAlign: "bottom",
-						verticalAlign: "right",
+						horizontalAlign: "right",
+						verticalAlign: "top",
 						type: "success"
 					});
 					this.$router.push({ name: "Users Table" });

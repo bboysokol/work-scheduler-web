@@ -6,6 +6,7 @@
 		:plugins="calendarPlugins"
 		:events="shifts"
 		:selectable="true"
+		@prev="console.log('test')"
 		@eventClick="dateClick"
 		:header="header"
 		:buttonIcons="buttonIcons"
@@ -21,6 +22,17 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 export default {
+	props: {
+		refresh: {
+			type: Boolean,
+			required: true
+		}
+	},
+	watch: {
+		refresh() {
+			this.fetchShifts();
+		}
+	},
 	components: {
 		FullCalendar
 	},
@@ -45,6 +57,36 @@ export default {
 		};
 	},
 	methods: {
+		bindEvents() {
+			const prevButton = document.getElementsByClassName(
+				"fc-prev-button"
+			)[0];
+			prevButton.addEventListener("click", () => this.fetchShifts());
+			const nextButton = document.getElementsByClassName(
+				"fc-next-button"
+			)[0];
+			nextButton.addEventListener("click", () => this.fetchShifts());
+
+			const todayButton = document.getElementsByClassName(
+				"fc-today-button"
+			)[0];
+			todayButton.addEventListener("click", () => this.fetchShifts());
+
+			const dayButton = document.getElementsByClassName(
+				"fc-timeGridDay-button"
+			)[0];
+			dayButton.addEventListener("click", () => this.fetchShifts());
+
+			const weekButton = document.getElementsByClassName(
+				"fc-timeGridWeek-button"
+			)[0];
+			weekButton.addEventListener("click", () => this.fetchShifts());
+
+			const monthButton = document.getElementsByClassName(
+				"fc-dayGridMonth-button"
+			)[0];
+			monthButton.addEventListener("click", () => this.fetchShifts());
+		},
 		dateClick(info) {
 			if (info.event.classNames.includes("event-red"))
 				Swal.fire({
@@ -104,6 +146,7 @@ export default {
 				};
 			});
 			this.isLoading = false;
+			this.bindEvents();
 		},
 		async clearShifts() {
 			this.shifts.length = 0;

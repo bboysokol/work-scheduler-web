@@ -5,6 +5,8 @@ const APP_DOMAIN =
 	process.env.VUE_APP_NODE_ENV === "prod"
 		? "work-scheduler-web.github.io"
 		: "";
+const APP_PATH =
+	process.env.VUE_APP_NODE_ENV === "prod" ? "/work-scheduler-web" : "";
 
 const defaultParams = {
 	expires: "2h"
@@ -12,7 +14,7 @@ const defaultParams = {
 
 export default {
 	deleteSessionCookie() {
-		cookie.remove(SESSION_COOKIE_NAME, "", APP_DOMAIN);
+		cookie.remove(SESSION_COOKIE_NAME, APP_PATH, APP_DOMAIN);
 	},
 	hasSessionCookie() {
 		return !!cookie.get(SESSION_COOKIE_NAME);
@@ -22,7 +24,7 @@ export default {
 			SESSION_COOKIE_NAME,
 			token,
 			defaultParams.expires,
-			"",
+			APP_PATH,
 			APP_DOMAIN
 		);
 	},

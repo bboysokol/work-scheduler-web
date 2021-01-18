@@ -6,7 +6,10 @@
 					<card class="card-login card-plain">
 						<div slot="header">
 							<div class="logo-container">
-								<img src="/img/ws-logo.png" alt="" />
+								<img
+									src="/work-scheduler-web/img/ws-logo.png"
+									alt=""
+								/>
 							</div>
 						</div>
 						<div>

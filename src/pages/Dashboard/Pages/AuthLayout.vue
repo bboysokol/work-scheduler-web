@@ -5,7 +5,7 @@
 				class="full-page section-image"
 				:class="pageClass"
 				filter-color="black"
-				data-image="/img/bg13.jpg"
+				data-image="/work-scheduler-web/img/bg13.jpg"
 			>
 				<div class="content">
 					<div class="container">
@@ -40,7 +40,7 @@
 				</footer>
 				<div
 					class="full-page-background"
-					style="backgroundImage: url('/img/bg13.jpg')"
+					style="backgroundImage: url('/work-scheduler-web/img/bg13.jpg')"
 				></div>
 			</div>
 		</div>

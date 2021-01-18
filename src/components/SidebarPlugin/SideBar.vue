@@ -76,7 +76,7 @@ export default {
 		},
 		logo: {
 			type: String,
-			default: "/img/ws-logo.png"
+			default: "/work-scheduler-web/img/ws-logo.png"
 		},
 		sidebarLinks: {
 			type: Array,

@@ -7,8 +7,11 @@ function resolveSrc(_path) {
 // vue.config.js
 module.exports = {
 	lintOnSave: true,
+	devServer: {
+		port: 8080
+	},
+	publicPath: "/work-scheduler-web/",
 	configureWebpack: {
-		// Set up all the aliases we use in our app.
 		resolve: {
 			alias: {
 				"src": resolveSrc("src"),
@@ -23,7 +26,6 @@ module.exports = {
 		]
 	},
 	css: {
-		// Enable CSS source maps.
-		sourceMap: process.env.NODE_ENV !== "production"
+		sourceMap: process.env.NODE_ENV !== "prod"
 	}
 };

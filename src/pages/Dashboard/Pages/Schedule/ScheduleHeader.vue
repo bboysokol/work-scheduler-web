@@ -1,15 +1,10 @@
 <template>
 	<div class="panel-header">
 		<div class="header text-center">
-			<h2 class="title">FullCalendar.io</h2>
+			<h2 class="title">Work Schedule</h2>
 			<p class="category">
-				Handcrafted by our friends from
-				<a target="_blank" href="https://fullcalendar.io/"
-					>FullCalendar.io</a
-				>. Please checkout their
-				<a href="https://fullcalendar.io/docs/" target="_blank"
-					>full documentation.</a
-				>
+				<strong>Click / select range</strong> of date to block shifts.
+				To remove a shift, <strong>click</strong> on shift
 			</p>
 		</div>
 	</div>

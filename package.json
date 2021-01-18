@@ -1,9 +1,10 @@
 {
-	"name": "vue-now-ui-dashboard-pro",
-	"version": "1.2.0",
+	"name": "work-scheduler",
+	"version": "1.0.0",
 	"private": true,
-	"description": "Vue Now UI Dashboard PRO",
-	"author": "cristijora <joracristi@gmail.com>",
+	"description": "WORK SCHEDULER",
+	"author": "Przemysław Sokołowski <bboy_sokol@o2.pl>",
+	"homepage": "https://bboysokol.github.io/work-scheduler-web/",
 	"scripts": {
 		"serve": "vue-cli-service serve --open",
 		"build": "vue-cli-service build",

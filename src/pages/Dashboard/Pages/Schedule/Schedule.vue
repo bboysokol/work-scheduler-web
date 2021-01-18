@@ -1,18 +1,65 @@
 <template>
-	<fullCalendar
-		ref="calendar"
-		id="calendar"
-		defaultView="dayGridMonth"
-		:plugins="calendarPlugins"
-		:events="shifts"
-		:selectable="true"
-		@prev="console.log('test')"
-		@eventClick="dateClick"
-		:header="header"
-		:buttonIcons="buttonIcons"
-		:selectHelper="true"
-		:editable="false"
-	/>
+	<div>
+		<modal
+			:show.sync="modals.classic"
+			headerClasses="justify-content-center"
+		>
+			<h4 slot="header" class="title title-up">Block shift</h4>
+			<ValidationObserver ref="newShift">
+				<ValidationProvider
+					name="TimeRange"
+					rules="required"
+					v-slot="{ passed, errors }"
+				>
+					<fg-input :error="errors[0]" :hasSuccess="passed">
+						<el-time-picker
+							is-range
+							v-model="timeRange"
+							range-separator="To"
+							step="00:30"
+							:picker-options="`00:00:00 - 24:00:00`"
+							format="HH:mm"
+							start-placeholder="Start time"
+							end-placeholder="End time"
+						>
+						</el-time-picker>
+					</fg-input>
+				</ValidationProvider>
+			</ValidationObserver>
+			<template slot="footer">
+				<n-button
+					@click.native="createShift"
+					type="primary"
+					round
+					block
+				>
+					Create Shift
+				</n-button>
+				<n-button
+					type="danger"
+					@click.native="modals.classic = false"
+					round
+				>
+					Close
+				</n-button>
+			</template>
+		</modal>
+		<fullCalendar
+			ref="calendar"
+			id="calendar"
+			defaultView="dayGridMonth"
+			:plugins="calendarPlugins"
+			:events="shifts"
+			:selectable="true"
+			@prev="console.log('test')"
+			@eventClick="dateClick"
+			@select="createShiftClick"
+			:header="header"
+			:buttonIcons="buttonIcons"
+			:selectHelper="true"
+			:editable="false"
+		/>
+	</div>
 </template>
 <script>
 import Swal from "sweetalert2";
@@ -20,21 +67,12 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
+import { TimePicker } from "element-ui";
 
 export default {
-	props: {
-		refresh: {
-			type: Boolean,
-			required: true
-		}
-	},
-	watch: {
-		refresh() {
-			this.fetchShifts();
-		}
-	},
 	components: {
-		FullCalendar
+		FullCalendar,
+		[TimePicker.name]: TimePicker
 	},
 	mounted() {
 		this.fetchShifts();
@@ -53,7 +91,12 @@ export default {
 				prevYear: "fc-icon-left-single-arrow",
 				nextYear: "fc-icon-right-single-arrow"
 			},
-			shifts: []
+			shifts: [],
+			modals: {
+				classic: false
+			},
+			timeRange: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 16, 0)],
+			blockedShifts: []
 		};
 	},
 	methods: {
@@ -98,19 +141,67 @@ export default {
 					cancelButtonClass: "btn btn-danger btn-fill",
 					confirmButtonText: "Yes, delete it!",
 					buttonsStyling: false
-				}).then((result) => {
+				}).then(async (result) => {
 					if (result.value) {
-						this.deleteShift(+info.event.title.split("-")[1]);
-						info.event.remove();
-						Swal.fire({
-							title: "Deleted!",
-							text: `You deleted a shift`,
-							type: "success",
-							confirmButtonClass: "btn btn-success btn-fill",
-							buttonsStyling: false
-						});
+						const deleteResult = await this.deleteShift(
+							+info.event.title.split("-")[1]
+						);
+						if (deleteResult.status) {
+							info.event.remove();
+							Swal.fire({
+								title: "Deleted!",
+								text: `You deleted a shift`,
+								type: "success",
+								confirmButtonClass: "btn btn-success btn-fill",
+								buttonsStyling: false
+							});
+							this.blockedShifts.length = 0;
+							this.fetchShifts();
+						}
 					}
 				});
+		},
+		createShiftClick(info) {
+			if (info.date) {
+				this.blockedShifts.push({ date: info.date });
+			} else {
+				for (
+					let element = info.start;
+					element < info.end;
+					element.setDate(element.getDate() + 1)
+				) {
+					this.blockedShifts.push({
+						date: new Date(element)
+					});
+				}
+			}
+			this.modals.classic = true;
+		},
+		async createShift() {
+			let isValidForm = await this.$refs.newShift.validate();
+			if (isValidForm) {
+				const shifts = this.blockedShifts.map((item) => ({
+					startTime: new Date(
+						item.date.setHours(this.timeRange[0].getHours())
+					),
+					endTime: new Date(
+						item.date.setHours(this.timeRange[1].getHours())
+					)
+				}));
+
+				var result = await this.$shift.addShift(shifts);
+				if (result.status === true) {
+					this.$notify({
+						message: "Shifts created successfuly",
+						timeout: 4000,
+						icon: "now-ui-icons ui-1_bell-53",
+						horizontalAlign: "right",
+						verticalAlign: "top",
+						type: "success"
+					});
+					this.fetchShifts();
+				}
+			}
 		},
 		async fetchShifts() {
 			this.isLoading = true;
@@ -152,7 +243,7 @@ export default {
 			this.shifts.length = 0;
 		},
 		async deleteShift(id) {
-			await this.$shift.deleteShift(id);
+			return await this.$shift.deleteShift(id);
 		}
 	}
 };

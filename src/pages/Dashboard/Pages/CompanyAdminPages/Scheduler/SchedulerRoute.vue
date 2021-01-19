@@ -68,7 +68,7 @@
 										"
 										class="inline-input w-100"
 										v-model="newShift.fullname"
-										:fetch-suggestions="getUsers"
+										:fetch-suggestions="getAvailableUsers"
 										placeholder="User"
 										:trigger-on-focus="false"
 										:clearable="true"
@@ -151,12 +151,16 @@
 									:hasSuccess="passed"
 								>
 									<el-autocomplete
-										:disabled="!editedShift.fullname"
+										:disabled="
+											!editedShift.end ||
+												!editedShift.start
+										"
 										class="inline-input w-100"
 										v-model="editedShift.fullname"
-										:fetch-suggestions="getUsers"
+										:fetch-suggestions="getAvailableUsers"
 										placeholder="User"
 										:trigger-on-focus="false"
+										@select="handleSelect"
 										:clearable="true"
 										size="small"
 									></el-autocomplete>
@@ -345,8 +349,21 @@ export default {
 		editRow(row) {
 			this.editedShift = row;
 		},
-		getUsers() {
-			console.log("hihi");
+		async getAvailableUsers(searchQuery, cb) {
+			const result = await this.$user.getAvailableUsers(
+				this.editedShift.start,
+				searchQuery
+			);
+			if (result.status)
+				cb(
+					result.data.map((item) => ({
+						value: `${item.personalData.firstName} ${item.personalData.lastName}`,
+						id: item.id
+					}))
+				);
+		},
+		handleSelect(item) {
+			console.log(item);
 		},
 		async generateSchedules() {
 			const startRange = this.scheduleConfig.range[0];

@@ -11,6 +11,15 @@ export default function(Vue) {
 
 			return result;
 		},
+		async getAvailableUsers(day, searchQuery) {
+			const result = await requestSender.send({
+				method: "get",
+				url: `/users/available`,
+				params: { day, searchQuery }
+			});
+
+			return result;
+		},
 		async addUser(request) {
 			const result = await requestSender.send(
 				{

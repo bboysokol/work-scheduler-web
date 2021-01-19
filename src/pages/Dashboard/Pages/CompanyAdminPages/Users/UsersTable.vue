@@ -32,7 +32,30 @@
 							>
 							</el-option>
 						</el-select>
+
 						<fg-input>
+							<n-button
+								v-if="searchQuery"
+								class="mr-2"
+								type="success"
+								icon
+								@click.native="getUsers"
+								round
+							>
+								<i class="now-ui-icons el-icon-search"></i>
+							</n-button>
+							<n-button
+								v-if="searchQuery"
+								class="mr-2"
+								type="danger"
+								icon
+								@click.native="clearSearch"
+								round
+							>
+								<i
+									class="now-ui-icons el-icon-remove-outline"
+								></i>
+							</n-button>
 							<el-input
 								type="search"
 								class="mb-3"
@@ -252,16 +275,13 @@ export default {
 				});
 				this.getUsers();
 			}
+		},
+		clearSearch() {
+			this.searchQuery = "";
+			this.getUsers();
 		}
 	},
 	watch: {
-		searchQuery(value) {
-			let result = this.tableData;
-			if (value !== "") {
-				result = this.fuseSearch.search(this.searchQuery);
-			}
-			this.searchedData = result;
-		},
 		currentPage() {
 			this.getUsers();
 		},

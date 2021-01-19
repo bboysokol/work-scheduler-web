@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6c1b309499e704b15c04",
+    "revision": "246dbc3d0eb466394a6c",
     "url": "/work-scheduler-web/css/app.cb905b5a.css"
   },
   {
@@ -8,15 +8,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/css/auth.1f16466d.css"
   },
   {
-    "revision": "007dcddeb60e79b6b23e",
-    "url": "/work-scheduler-web/css/calendar.1df4dc42.css"
+    "revision": "862c8e4a21e9693696be",
+    "url": "/work-scheduler-web/css/calendar.7e826255.css"
   },
   {
     "revision": "55ec3664f5be85ccfff7",
     "url": "/work-scheduler-web/css/chunk-878a9976.d0cbe4b9.css"
   },
   {
-    "revision": "24ac3de33a39cbae0956",
+    "revision": "5780f7b159d7b6b53159",
     "url": "/work-scheduler-web/css/pages.77244a76.css"
   },
   {
@@ -64,20 +64,20 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/img/ws-logo.png"
   },
   {
-    "revision": "d8cad948e27985c40e1fc02de6d39af5",
+    "revision": "ad67a3a6dae4cc75686cfebbc7315c04",
     "url": "/work-scheduler-web/index.html"
   },
   {
-    "revision": "6c1b309499e704b15c04",
-    "url": "/work-scheduler-web/js/app.d61cf9ce.js"
+    "revision": "246dbc3d0eb466394a6c",
+    "url": "/work-scheduler-web/js/app.413db54b.js"
   },
   {
     "revision": "d665fbb642a99059f5f9",
     "url": "/work-scheduler-web/js/auth.451eb9b5.js"
   },
   {
-    "revision": "007dcddeb60e79b6b23e",
-    "url": "/work-scheduler-web/js/calendar.bbb88230.js"
+    "revision": "862c8e4a21e9693696be",
+    "url": "/work-scheduler-web/js/calendar.82905161.js"
   },
   {
     "revision": "8bcc870c00a9a8d953eb",
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/js/chunk-878a9976.6d2191fd.js"
   },
   {
-    "revision": "24ac3de33a39cbae0956",
-    "url": "/work-scheduler-web/js/pages.6b3775ef.js"
+    "revision": "5780f7b159d7b6b53159",
+    "url": "/work-scheduler-web/js/pages.26e0d80b.js"
   },
   {
     "revision": "d8a975de9d267c8fa546d9683915b835",

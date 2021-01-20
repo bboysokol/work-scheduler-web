@@ -153,7 +153,8 @@ export default {
 			if (isValidForm) {
 				const result = await this.$user.updateUser(this.userCopy.id, {
 					email: this.userCopy.email,
-					role: this.userCopy.role
+					role: this.userCopy.role,
+					employmentType: this.userCopy.personalData.employmentType
 				});
 				if (result.status === true) {
 					this.$notify({

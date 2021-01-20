@@ -81,7 +81,7 @@ export default {
 		return {
 			calendarPlugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
 			header: {
-				center: "dayGridMonth,timeGridWeek,timeGridDay",
+				center: "dayGridMonth,timeGridWeek",
 				right: "prev,next,today"
 			},
 			buttonIcons: {

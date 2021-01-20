@@ -13,73 +13,82 @@
 									complete the form to create a shift
 								</small>
 							</div>
-							<ValidationProvider
-								name="Date"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+							<ValidationObserver ref="create">
+								<ValidationProvider
+									name="Date"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-									<el-date-picker
-										v-model="newShift.date"
-										class="mt-md-auto mt-2"
-										type="date"
-										placeholder="Pick a day"
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
 									>
-									</el-date-picker>
-								</fg-input>
-							</ValidationProvider>
-
-							<ValidationProvider
-								name="TimeRange"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+										<el-select
+											class="select-danger mt-2"
+											placeholder="Pick a day"
+											v-model="newShift.schedule"
+										>
+											<el-option
+												v-for="option in availableDays"
+												class="select-danger"
+												:value="option"
+												:label="option.label"
+												:key="option.label"
+											>
+											</el-option>
+										</el-select>
+									</fg-input>
+								</ValidationProvider>
+								<ValidationProvider
+									name="TimeRange"
+									v-slot="{ passed, errors }"
 								>
-									<el-time-picker
-										:disabled="!newShift.date"
-										is-range
-										v-model="newShift.time"
-										range-separator="To"
-										format="HH:mm"
-										start-placeholder="Start time"
-										end-placeholder="End time"
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
 									>
-									</el-time-picker>
-								</fg-input>
-							</ValidationProvider>
-							<ValidationProvider
-								name="TimeRange"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+										<el-time-picker
+											:disabled="!newShift.schedule"
+											is-range
+											v-model="newShift.time"
+											range-separator="To"
+											format="HH:mm"
+											start-placeholder="Start time"
+											end-placeholder="End time"
+										>
+										</el-time-picker>
+									</fg-input>
+								</ValidationProvider>
+								<ValidationProvider
+									name="TimeRange"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-									<el-autocomplete
-										:disabled="
-											!newShift.date || !newShift.time
-										"
-										class="inline-input w-100"
-										v-model="newShift.fullname"
-										:fetch-suggestions="getAvailableUsers"
-										placeholder="User"
-										:trigger-on-focus="false"
-										:clearable="true"
-										size="small"
-									></el-autocomplete>
-								</fg-input>
-							</ValidationProvider>
-
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
+									>
+										<el-autocomplete
+											:disabled="
+												!newShift.schedule ||
+													!newShift.time
+											"
+											class="inline-input w-100"
+											v-model="newShift.fullname"
+											:fetch-suggestions="
+												getAvailableUsers
+											"
+											placeholder="User"
+											@select="handleNewSelect"
+											:clearable="true"
+											size="small"
+										></el-autocomplete>
+									</fg-input>
+								</ValidationProvider>
+							</ValidationObserver>
 							<n-button
 								:disabled="
-									!newShift.date ||
+									!newShift.schedule ||
 										!newShift.time ||
 										!newShift.fullname
 								"
@@ -100,72 +109,75 @@
 									click a shift on the calendar to edit
 								</small>
 							</div>
-							<ValidationProvider
-								name="TimeRangeStart"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+							<ValidationObserver ref="update">
+								<ValidationProvider
+									name="TimeRangeStart"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-									<el-time-picker
-										class="mt-2"
-										:disabled="!editedShift.start"
-										v-model="editedShift.start"
-										:picker-options="{
-											selectableRange: `00:00:00 - ${editedShift.end}`
-										}"
-										placeholder="Shift start time"
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
 									>
-									</el-time-picker>
-								</fg-input>
-							</ValidationProvider>
-							<ValidationProvider
-								name="TimeRangeEnd"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+										<el-time-picker
+											class="mt-2"
+											:disabled="!editedShift.start"
+											v-model="editedShift.start"
+											:picker-options="{
+												selectableRange: `00:00:00 - ${editedShift.end}`
+											}"
+											placeholder="Shift start time"
+										>
+										</el-time-picker>
+									</fg-input>
+								</ValidationProvider>
+								<ValidationProvider
+									name="TimeRangeEnd"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-									<el-time-picker
-										:disabled="!editedShift.end"
-										v-model="editedShift.end"
-										:picker-options="{
-											selectableRange: `${editedShift.start} - 24:00:00`
-										}"
-										placeholder="Shift end time"
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
 									>
-									</el-time-picker>
-								</fg-input>
-							</ValidationProvider>
-							<ValidationProvider
-								name="User"
-								rules="required"
-								v-slot="{ passed, errors }"
-							>
-								<fg-input
-									:error="errors[0]"
-									:hasSuccess="passed"
+										<el-time-picker
+											:disabled="!editedShift.end"
+											v-model="editedShift.end"
+											:picker-options="{
+												selectableRange: `${editedShift.start} - 24:00:00`
+											}"
+											placeholder="Shift end time"
+										>
+										</el-time-picker>
+									</fg-input>
+								</ValidationProvider>
+								<ValidationProvider
+									name="User"
+									rules="required"
+									v-slot="{ passed, errors }"
 								>
-									<el-autocomplete
-										:disabled="
-											!editedShift.end ||
-												!editedShift.start
-										"
-										class="inline-input w-100"
-										v-model="editedShift.fullname"
-										:fetch-suggestions="getAvailableUsers"
-										placeholder="User"
-										:trigger-on-focus="false"
-										@select="handleSelect"
-										:clearable="true"
-										size="small"
-									></el-autocomplete>
-								</fg-input>
-							</ValidationProvider>
+									<fg-input
+										:error="errors[0]"
+										:hasSuccess="passed"
+									>
+										<el-autocomplete
+											:disabled="
+												!editedShift.end ||
+													!editedShift.start
+											"
+											class="inline-input w-100"
+											v-model="editedShift.fullname"
+											:fetch-suggestions="
+												getAvailableUsers
+											"
+											placeholder="User"
+											@select="handleSelect"
+											:clearable="true"
+											size="small"
+										></el-autocomplete>
+									</fg-input>
+								</ValidationProvider>
+							</ValidationObserver>
 							<n-button
 								:disabled="
 									!editedShift.start ||
@@ -282,13 +294,15 @@
 						:dateRange="dateRange"
 						@edited="setEdited"
 						@shiftPicked="editRow"
+						@scheduleFetched="scheduleFetched"
+						@shiftDeleted="shiftDeleted"
 					></scheduler>
 					<div class="d-flex justify-content-end">
 						<n-button
 							v-if="edited"
-							native-type="submit"
 							type="success"
 							round
+							@click.native="saveChanges"
 							size="lg"
 						>
 							Save Changes
@@ -306,7 +320,9 @@ import {
 	DatePicker,
 	Button,
 	TimePicker,
-	Autocomplete
+	Autocomplete,
+	Select,
+	Option
 } from "element-ui";
 
 const Scheduler = () => ({
@@ -319,16 +335,22 @@ export default {
 		return {
 			edited: false,
 			editedShift: {},
-			newShift: {},
+			newShift: {
+				schedule: null
+			},
 			scheduleConfig: {
 				range: [],
 				employeeLimit: 1
 			},
+			editedShifts: {},
+			deletedShifts: [],
+			newShifts: [],
 			availableUsers: [],
 			dateRange: {
 				start: null,
 				end: null
-			}
+			},
+			availableDays: []
 		};
 	},
 	created() {
@@ -340,19 +362,24 @@ export default {
 		[TimePicker.name]: TimePicker,
 		[Autocomplete.name]: Autocomplete,
 		[TimeSelect.name]: TimeSelect,
-		[Button.name]: Button
+		[Button.name]: Button,
+		[Select.name]: Select,
+		[Option.name]: Option
 	},
 	methods: {
 		setEdited(state) {
 			this.edited = state;
 		},
 		editRow(row) {
+			console.log(row);
 			this.editedShift = row;
 		},
 		async getAvailableUsers(searchQuery, cb) {
 			const result = await this.$user.getAvailableUsers(
-				this.editedShift.start,
-				searchQuery
+				this.editedShift.start
+					? this.editedShift.start
+					: this.newShift.schedule.value.date,
+				searchQuery ? searchQuery : ""
 			);
 			if (result.status)
 				cb(
@@ -363,7 +390,34 @@ export default {
 				);
 		},
 		handleSelect(item) {
-			console.log(item);
+			this.editedShift.new = item;
+		},
+		handleNewSelect(item) {
+			this.newShift.new = item;
+		},
+		async saveChanges() {
+			if (this.deletedShifts.length > 0) {
+				for (const key of Object.keys(this.editedShifts)) {
+					if (this.deletedShifts.includes(key))
+						delete this.editedShifts[key];
+				}
+			}
+			const result = await this.$schedule.updateSchedule({
+				updatedShifts: this.editedShifts,
+				deletedShifts: this.deletedShifts,
+				addedShifts: this.newShifts
+			});
+			if (result.status) {
+				this.$notify({
+					message: "Schedule saved successfuly!",
+					timeout: 4000,
+					icon: "now-ui-icons ui-1_bell-53",
+					horizontalAlign: "right",
+					verticalAlign: "top",
+					type: "success"
+				});
+				this.edited = false;
+			}
 		},
 		async generateSchedules() {
 			const startRange = this.scheduleConfig.range[0];
@@ -396,10 +450,76 @@ export default {
 				});
 		},
 		createShift() {
-			console.log(this.newShift);
+			const shift = {
+				scheduleId: this.newShift.schedule.value.scheduleId,
+				startTime: new Date(
+					new Date(this.newShift.schedule.value.date).setHours(
+						this.newShift.time[0].getHours()
+					)
+				),
+				endTime: new Date(
+					new Date(this.newShift.schedule.value.date).setHours(
+						this.newShift.time[1].getHours()
+					)
+				),
+				userId: this.newShift.new.id
+			};
+			this.newShifts.push(shift);
+			this.$notify({
+				message:
+					"New shift added to queue. Remember to be sure to save changes at the bottom of the page",
+				timeout: 4000,
+				icon: "now-ui-icons ui-1_bell-53",
+				horizontalAlign: "right",
+				verticalAlign: "top",
+				type: "success"
+			});
+			this.edited = true;
+			this.newShift = {
+				schedule: null
+			};
+			this.$refs.create.reset();
+		},
+		shiftDeleted(id) {
+			this.deletedShifts.push(id);
+			this.$notify({
+				message:
+					"Shift deleted. Remember to be sure to save changes at the bottom of the page",
+				timeout: 4000,
+				icon: "now-ui-icons ui-1_bell-53",
+				horizontalAlign: "right",
+				verticalAlign: "top",
+				type: "success"
+			});
+			this.edited = true;
+		},
+		scheduleFetched(array) {
+			this.availableDays = array;
 		},
 		updateShift() {
-			console.log(this.editedShift);
+			this.editedShifts[this.editedShift.id] = {
+				scheduleId: this.editedShift.scheduleId,
+				startTime: this.editedShift.start,
+				endTime: this.editedShift.end,
+				userId: this.editedShift.userId
+			};
+			if (this.editedShift.new) {
+				this.editedShifts[
+					this.editedShift.id
+				].userId = this.editedShift.new.id;
+			}
+			this.edited = true;
+			this.$notify({
+				message:
+					"Shift updated localy. Remember to be sure to save changes at the bottom of the page",
+				timeout: 4000,
+				icon: "now-ui-icons ui-1_bell-53",
+				horizontalAlign: "right",
+				verticalAlign: "top",
+				type: "success"
+			});
+			this.editedShift = {};
+			this.$refs.update.reset();
 		},
 		move(state) {
 			this.dateRange.start = new Date(

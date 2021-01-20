@@ -26,9 +26,27 @@
 							:key="shift.fullname"
 							style=" overflow-x:hidden; word-break: break-all"
 							class="text-left entity-bordered employees"
-							@click="editRow(shift)"
 						>
 							{{ shift.fullname }}
+							<button
+								type="button"
+								v-if="shift.fullname"
+								@click="deleteShift(shift.id)"
+								class="close"
+								style="color:red"
+								data-dismiss="modal"
+							>
+								<i class="now-ui-icons ui-1_simple-remove"></i>
+							</button>
+							<button
+								type="primary"
+								v-if="shift.fullname"
+								@click="editRow(shift)"
+								class="close"
+								data-dismiss="modal"
+							>
+								<i class="now-ui-icons el-icon-edit"></i>
+							</button>
 						</div>
 					</td>
 
@@ -81,6 +99,16 @@ export default {
 		isFilled(item, i) {
 			return item.start.getHours() <= i && item.end.getHours() >= i;
 		},
+		deleteShift(shiftId) {
+			this.$emit("shiftDeleted", shiftId);
+			this.schedules.forEach((schedule) => {
+				const index = schedule.shifts.findIndex(
+					(shift) => shift.id === shiftId
+				);
+				if (index > -1) schedule.shifts.splice(index, 1);
+			});
+			console.log(shiftId);
+		},
 		editRow(row) {
 			this.$emit("shiftPicked", row);
 		},
@@ -111,10 +139,24 @@ export default {
 									temporaryEnd.getTimezoneOffset() / 60
 							)
 						),
-						fullname: `${shift.user.personalData.firstName} ${shift.user.personalData.lastName}`
+						fullname: `${shift.user.personalData.firstName} ${shift.user.personalData.lastName}`,
+						id: shift.id,
+						userId: shift.user.id,
+						scheduleId: shift.scheduleId
 					};
 				});
 			});
+			const schedules = this.schedules.map((schedule) => ({
+				value: {
+					scheduleId: schedule.shifts[0]?.scheduleId,
+					date: schedule.shifts[0]?.start
+				},
+				label: schedule.name
+			}));
+			this.$emit(
+				"scheduleFetched",
+				schedules.filter((item) => item.value.scheduleId)
+			);
 			this.isLoading = false;
 		},
 		async clearShifts() {
@@ -123,6 +165,7 @@ export default {
 			);
 		}
 	},
+
 	watch: {
 		dateRange: {
 			deep: true,

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/work-scheduler-web/precache-manifest.3619606afaa5f895f2e9e9f24dfad061.js"
+  "/work-scheduler-web/precache-manifest.f0c5ef2a600ff86e7e1151fc7bebf026.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "work-scheduler"});

@@ -1,14 +1,17 @@
 <template>
 	<div class="sidebar" :data-color="backgroundColor">
 		<div class="logo">
-			<a href="http://www.creative-tim.com" class="simple-text logo-mini">
+			<a
+				href="https://bboysokol.github.io/work-scheduler-web"
+				class="simple-text logo-mini"
+			>
 				<div class="logo-image">
 					<img :src="logo" />
 				</div>
 			</a>
 
 			<a
-				href="http://www.creative-tim.com"
+				href="https://bboysokol.github.io/work-scheduler-web"
 				class="simple-text logo-normal"
 			>
 				{{ title }}

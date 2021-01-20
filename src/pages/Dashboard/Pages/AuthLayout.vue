@@ -22,7 +22,9 @@
 						<nav>
 							<ul>
 								<li>
-									<a href="https://www.creative-tim.com">
+									<a
+										href="https://bboysokol.github.io/work-scheduler-web"
+									>
 										Work Scheduler
 									</a>
 								</li>

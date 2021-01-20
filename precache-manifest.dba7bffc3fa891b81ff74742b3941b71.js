@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "dc360b2317c3768dff29",
+    "revision": "5c7ad447d02392e429b5",
     "url": "/work-scheduler-web/css/app.d33443b3.css"
   },
   {
@@ -8,16 +8,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/css/auth.1f16466d.css"
   },
   {
-    "revision": "a7ce7e0e08e7dc3e861b",
-    "url": "/work-scheduler-web/css/calendar.80bc013a.css"
+    "revision": "ac74974e2d8aba87549a",
+    "url": "/work-scheduler-web/css/calendar.7adb1a84.css"
   },
   {
-    "revision": "04f94043d1201be6ed5d",
-    "url": "/work-scheduler-web/css/chunk-878a9976.8a717443.css"
+    "revision": "28e17bcd2273ad65aef8",
+    "url": "/work-scheduler-web/css/chunk-878a9976.107683d3.css"
   },
   {
-    "revision": "21f07cdc0377c3b67cd2",
-    "url": "/work-scheduler-web/css/pages.97ff80df.css"
+    "revision": "835ea31317fe2e5f4877",
+    "url": "/work-scheduler-web/css/pages.bf409d39.css"
   },
   {
     "revision": "996d8248f580f8e26e6c45c67da9b5a6",
@@ -64,32 +64,32 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/img/ws-logo.png"
   },
   {
-    "revision": "eb001a5367c18bb2966abd0d377b62f4",
+    "revision": "024d96faa2f3553cfdf458c9b21f6697",
     "url": "/work-scheduler-web/index.html"
   },
   {
-    "revision": "dc360b2317c3768dff29",
-    "url": "/work-scheduler-web/js/app.a532187f.js"
+    "revision": "5c7ad447d02392e429b5",
+    "url": "/work-scheduler-web/js/app.9f6e7b73.js"
   },
   {
     "revision": "d665fbb642a99059f5f9",
     "url": "/work-scheduler-web/js/auth.451eb9b5.js"
   },
   {
-    "revision": "a7ce7e0e08e7dc3e861b",
-    "url": "/work-scheduler-web/js/calendar.35d8bf71.js"
+    "revision": "ac74974e2d8aba87549a",
+    "url": "/work-scheduler-web/js/calendar.5c014644.js"
   },
   {
     "revision": "8bcc870c00a9a8d953eb",
     "url": "/work-scheduler-web/js/chunk-7f7124ab.650ba85e.js"
   },
   {
-    "revision": "04f94043d1201be6ed5d",
-    "url": "/work-scheduler-web/js/chunk-878a9976.485074c8.js"
+    "revision": "28e17bcd2273ad65aef8",
+    "url": "/work-scheduler-web/js/chunk-878a9976.290ff001.js"
   },
   {
-    "revision": "21f07cdc0377c3b67cd2",
-    "url": "/work-scheduler-web/js/pages.fce4022d.js"
+    "revision": "835ea31317fe2e5f4877",
+    "url": "/work-scheduler-web/js/pages.7f042ec5.js"
   },
   {
     "revision": "d8a975de9d267c8fa546d9683915b835",

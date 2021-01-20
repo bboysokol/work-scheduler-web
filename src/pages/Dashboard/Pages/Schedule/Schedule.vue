@@ -51,7 +51,6 @@
 			:plugins="calendarPlugins"
 			:events="shifts"
 			:selectable="true"
-			@prev="console.log('test')"
 			@eventClick="dateClick"
 			@select="createShiftClick"
 			:header="header"

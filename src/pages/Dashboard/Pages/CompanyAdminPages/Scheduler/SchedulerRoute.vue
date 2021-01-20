@@ -292,6 +292,7 @@
 					</div>
 					<scheduler
 						:dateRange="dateRange"
+						:refresh="refresh"
 						@edited="setEdited"
 						@shiftPicked="editRow"
 						@scheduleFetched="scheduleFetched"
@@ -350,7 +351,8 @@ export default {
 				start: null,
 				end: null
 			},
-			availableDays: []
+			availableDays: [],
+			refresh: false
 		};
 	},
 	created() {
@@ -371,7 +373,6 @@ export default {
 			this.edited = state;
 		},
 		editRow(row) {
-			console.log(row);
 			this.editedShift = row;
 		},
 		async getAvailableUsers(searchQuery, cb) {
@@ -417,6 +418,7 @@ export default {
 					type: "success"
 				});
 				this.edited = false;
+				this.refresh = !this.refresh;
 			}
 		},
 		async generateSchedules() {
@@ -438,7 +440,7 @@ export default {
 				});
 			}
 			const result = await this.$schedule.generateSchedule(shift);
-			if (result.status)
+			if (result.status) {
 				this.$notify({
 					message:
 						"Schedule generated successfuly. Refresh page for results",
@@ -448,6 +450,8 @@ export default {
 					verticalAlign: "top",
 					type: "success"
 				});
+				this.refresh = !this.refresh;
+			}
 		},
 		createShift() {
 			const shift = {

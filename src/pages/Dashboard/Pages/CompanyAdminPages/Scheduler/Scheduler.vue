@@ -75,6 +75,10 @@ export default {
 		dateRange: {
 			required: true,
 			type: Object
+		},
+		refresh: {
+			required: true,
+			type: Boolean
 		}
 	},
 	mounted() {
@@ -107,7 +111,6 @@ export default {
 				);
 				if (index > -1) schedule.shifts.splice(index, 1);
 			});
-			console.log(shiftId);
 		},
 		editRow(row) {
 			this.$emit("shiftPicked", row);
@@ -172,6 +175,9 @@ export default {
 			handler() {
 				this.fetchSchedule();
 			}
+		},
+		refresh() {
+			this.fetchSchedule();
 		}
 	}
 };

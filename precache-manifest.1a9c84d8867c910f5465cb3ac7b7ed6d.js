@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6340e4759c1c4fcfe768",
+    "revision": "0f0e023822ff7b779b02",
     "url": "/work-scheduler-web/css/app.d33443b3.css"
   },
   {
@@ -64,12 +64,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/img/ws-logo.png"
   },
   {
-    "revision": "06691f87667cf4fe4bc8c283d19fd65d",
+    "revision": "c21f58a3b60bd7711d4b0ecea6097f5b",
     "url": "/work-scheduler-web/index.html"
   },
   {
-    "revision": "6340e4759c1c4fcfe768",
-    "url": "/work-scheduler-web/js/app.69a437e0.js"
+    "revision": "0f0e023822ff7b779b02",
+    "url": "/work-scheduler-web/js/app.fadcdbea.js"
   },
   {
     "revision": "d665fbb642a99059f5f9",

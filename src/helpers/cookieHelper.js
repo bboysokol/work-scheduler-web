@@ -2,9 +2,7 @@ import cookie from "vue-cookies";
 
 const SESSION_COOKIE_NAME = "common_token";
 const APP_DOMAIN =
-	process.env.VUE_APP_NODE_ENV === "prod"
-		? "work-scheduler-web.github.io"
-		: "";
+	process.env.VUE_APP_NODE_ENV === "prod" ? "bboysokol.github.io" : "";
 const APP_PATH =
 	process.env.VUE_APP_NODE_ENV === "prod" ? "/work-scheduler-web" : "";
 

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0f0e023822ff7b779b02",
+    "revision": "dc360b2317c3768dff29",
     "url": "/work-scheduler-web/css/app.d33443b3.css"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/css/chunk-878a9976.8a717443.css"
   },
   {
-    "revision": "9020390151e82bf9a217",
+    "revision": "21f07cdc0377c3b67cd2",
     "url": "/work-scheduler-web/css/pages.97ff80df.css"
   },
   {
@@ -64,12 +64,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/img/ws-logo.png"
   },
   {
-    "revision": "c21f58a3b60bd7711d4b0ecea6097f5b",
+    "revision": "eb001a5367c18bb2966abd0d377b62f4",
     "url": "/work-scheduler-web/index.html"
   },
   {
-    "revision": "0f0e023822ff7b779b02",
-    "url": "/work-scheduler-web/js/app.fadcdbea.js"
+    "revision": "dc360b2317c3768dff29",
+    "url": "/work-scheduler-web/js/app.a532187f.js"
   },
   {
     "revision": "d665fbb642a99059f5f9",
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/work-scheduler-web/js/chunk-878a9976.485074c8.js"
   },
   {
-    "revision": "9020390151e82bf9a217",
-    "url": "/work-scheduler-web/js/pages.e53fea31.js"
+    "revision": "21f07cdc0377c3b67cd2",
+    "url": "/work-scheduler-web/js/pages.fce4022d.js"
   },
   {
     "revision": "d8a975de9d267c8fa546d9683915b835",
